@@ -39,7 +39,7 @@ const HomeScreen = () => {
       <FlatList
         data={filteredProducts} 
         renderItem={({ item }) => (
-          <ProductCard name={item.name} price={item.price} image={item.image} />
+          <ProductCard id={item.id} name={item.name} price={item.price} image={item.image} />
         )}
         keyExtractor={item => item.id}
         numColumns={2}

@@ -2,7 +2,7 @@ import { View, Image, ScrollView, TouchableOpacity, Text, StatusBar, ToastAndroi
 import React, { useState } from 'react';
 
 const ProductDetailScreen = ({ route }) => {
-  const { name, price, image } = route.params;
+  const {id, name, price, image } = route.params;
   const [quantity, setQuantity] = useState(1);
 
   const increaseQuantity = () => setQuantity(quantity + 1);
@@ -29,7 +29,7 @@ const ProductDetailScreen = ({ route }) => {
           className="object-cover w-full h-60"
         />
         <View className="p-4">
-          <Text className="text-2xl font-bold">{name}</Text>
+          <Text className="text-2xl font-bold">{name} | id:{id}</Text>
           <Text className="text-xl text-gray-600">{price}</Text>
 
           {/* Quantity Controls */}
