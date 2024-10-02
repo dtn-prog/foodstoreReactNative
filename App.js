@@ -1,21 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
-import RestaurantScreen from './screens/RestaurantScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Entypo from '@expo/vector-icons/Entypo';
 
+
+const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-        headerShown: false
+      <Tab.Navigator screenOptions={{
+        headerShown: false, tabBarActiveTintColor: 'blue'
       }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Restaurant" component={RestaurantScreen} />
-      </Stack.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} 
+        options={{tabBarIcon:()=><Entypo name="home" size={24} color="black" />}}/>
+        <Tab.Screen name="Reorder" component={HomeScreen} 
+        options={{tabBarIcon:()=><Entypo name="list" size={24} color="black" />}}/>
+        <Tab.Screen name="Cart" component={HomeScreen} 
+        options={{tabBarIcon:()=><Entypo name="shopping-cart" size={24} color="black" />}}/>
+        <Tab.Screen name="Account" component={HomeScreen} 
+        options={{tabBarIcon:()=><Entypo name="user" size={24} color="black" />}}/>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
