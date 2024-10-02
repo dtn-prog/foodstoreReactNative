@@ -7,7 +7,7 @@ const ProductCard = ({ name, price, image }) => {
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity onPress={()=>{navigation.navigate('ProductDetail')}}
+    <TouchableOpacity onPress={()=>{navigation.navigate('ProductDetail', {name,price,image})}}
     className="overflow-hidden flex-1 m-2 bg-white rounded-lg shadow-md"> 
       <Image
         source={image}
