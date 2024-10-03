@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import React, { useState } from 'react';
 import Header from '../components/Header';
 
@@ -34,136 +34,48 @@ const CartScreen = () => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Image source={item.image} style={styles.itemImage} />
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemQuantity}>Quantity: {item.quantity}</Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => decreaseQuantity(item.id)} style={styles.quantityButton}>
-            <Text style={styles.buttonText}>-</Text>
+    <View className="flex-row items-center p-4 my-2 bg-white rounded-lg shadow">
+      <Image source={item.image} className="w-16 h-16 rounded-lg" />
+      <View className="flex-1 ml-4">
+        <Text className="text-lg font-bold">{item.name}</Text>
+        <Text className="my-1 text-gray-600">Quantity: {item.quantity}</Text>
+        <View className="flex-row items-center mt-2">
+          <TouchableOpacity onPress={() => decreaseQuantity(item.id)} className="p-2 mr-2 bg-gray-300 rounded">
+            <Text className="font-bold">-</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => increaseQuantity(item.id)} style={styles.quantityButton}>
-            <Text style={styles.buttonText}>+</Text>
+          <TouchableOpacity onPress={() => increaseQuantity(item.id)} className="p-2 mr-2 bg-gray-300 rounded">
+            <Text className="font-bold">+</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => removeItem(item.id)} style={styles.removeButton}>
-            <Text style={styles.buttonText}>Remove</Text>
+          <TouchableOpacity onPress={() => removeItem(item.id)} className="p-2 bg-red-500 rounded">
+            <Text className="font-bold text-white">Remove</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={styles.itemPrice}>${(item.price * item.quantity).toFixed(2)}</Text>
+      <Text className="text-lg font-bold text-gray-800">${(item.price * item.quantity).toFixed(2)}</Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-gray-100">
       <Header />
       <FlatList
         data={cartItems}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle="pb-24"
       />
 
       {/* Total Price Section */}
-      <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Total: ${totalPrice.toFixed(2)}</Text>
+      <View className="p-4 bg-white border-t border-gray-300">
+        <Text className="text-2xl font-bold text-right">Total: ${totalPrice.toFixed(2)}</Text>
       </View>
 
       {/* Checkout Button */}
-      <TouchableOpacity style={styles.checkoutButton}>
-        <Text style={styles.checkoutText}>Checkout</Text>
+      <TouchableOpacity className="p-4 mx-4 my-2 bg-blue-500 rounded-lg">
+        <Text className="text-lg font-bold text-center text-white">Checkout</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 export default CartScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f8f8',
-  },
-  listContainer: {
-    paddingBottom: 100,
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    marginVertical: 8,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  itemImage: {
-    width: 64,
-    height: 64,
-    borderRadius: 8,
-  },
-  itemDetails: {
-    flex: 1,
-    marginLeft: 16,
-  },
-  itemName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  itemQuantity: {
-    color: '#666',
-    marginVertical: 4,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  quantityButton: {
-    backgroundColor: '#e0e0e0',
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 8,
-  },
-  removeButton: {
-    backgroundColor: '#ff4d4f',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  itemPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  totalContainer: {
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    backgroundColor: '#fff',
-  },
-  totalText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'right',
-  },
-  checkoutButton: {
-    padding: 16,
-    margin: 16,
-    backgroundColor: '#007BFF',
-    borderRadius: 8,
-  },
-  checkoutText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
