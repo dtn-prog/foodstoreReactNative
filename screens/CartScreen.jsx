@@ -51,7 +51,7 @@ const CartScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <Text className="text-lg font-bold text-gray-800">${(item.price * item.quantity).toFixed(2)}</Text>
+      <Text className="text-lg font-bold text-gray-800">${(item.price * item.quantity)}</Text>
     </View>
   );
 
@@ -67,7 +67,7 @@ const CartScreen = () => {
 
       {/* Total Price Section */}
       <View className="p-4 bg-white border-t border-gray-300">
-        <Text className="text-2xl font-bold text-right">Total: ${totalPrice.toFixed(2)}</Text>
+        <Text className="text-2xl font-bold text-right">Total: ${totalPrice}</Text>
       </View>
 
       {/* Checkout Button */}
