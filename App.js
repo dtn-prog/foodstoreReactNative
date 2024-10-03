@@ -6,6 +6,8 @@ import Entypo from '@expo/vector-icons/Entypo';
 import ProductDetailScreen from './screens/ProductDetailScreen';
 import CartScreen from './screens/CartScreen';
 import { CartProvider } from './context/CartContext';
+import AccountScreen from './screens/AccountScreen';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -32,7 +34,7 @@ export default function App() {
           options={{tabBarIcon:()=><Entypo name="list" size={24} color="black" />}}/>
           <Tab.Screen name="Cart" component={CartScreen} 
           options={{tabBarIcon:()=><Entypo name="shopping-cart" size={24} color="black" />}}/>
-          <Tab.Screen name="Account" component={HomeScreen} 
+          <Tab.Screen name="Account" component={AccountScreen} 
           options={{tabBarIcon:()=><Entypo name="user" size={24} color="black" />}}/>
         </Tab.Navigator>
       </NavigationContainer>

@@ -1,9 +1,12 @@
+// ProductDetailScreen.js
 import { View, Image, ScrollView, TouchableOpacity, Text, StatusBar, ToastAndroid } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 
 const ProductDetailScreen = ({ route }) => {
-  const {id, name, price, image } = route.params;
+  const { id, name, price, image } = route.params;
   const [quantity, setQuantity] = useState(1);
+  const { addItem } = useContext(CartContext);
 
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => {
@@ -13,6 +16,7 @@ const ProductDetailScreen = ({ route }) => {
   };
 
   const handleAddToCart = () => {
+    addItem({ id, name, price: parseFloat(price.replace('$', '')), quantity, image });
     ToastAndroid.showWithGravity(
       `${quantity} x ${name} has been added to your cart.`,
       ToastAndroid.SHORT,
@@ -31,8 +35,6 @@ const ProductDetailScreen = ({ route }) => {
         <View className="p-4">
           <Text className="text-2xl font-bold">{name} | id:{id}</Text>
           <Text className="text-xl text-gray-600">{price}</Text>
-
-          {/* Quantity Controls */}
           <View className="flex-row items-center mt-4">
             <TouchableOpacity onPress={decreaseQuantity} className="p-2 bg-gray-200 rounded">
               <Text className="text-lg">-</Text>
@@ -44,8 +46,6 @@ const ProductDetailScreen = ({ route }) => {
           </View>
         </View>
       </ScrollView>
-
-      {/* Add to Cart Button */}
       <TouchableOpacity onPress={handleAddToCart} className="p-4 mx-3 my-6 bg-blue-500 rounded-lg">
         <Text className="text-lg font-semibold text-center text-white">Add to Cart</Text>
       </TouchableOpacity>
