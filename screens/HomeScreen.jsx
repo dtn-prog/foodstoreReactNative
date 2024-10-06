@@ -3,15 +3,36 @@ import React, { useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Header from '../components/Header';
 import ProductCard from '../components/ProductCard';
+import axios from 'axios';
+import { baseUrl } from '../api';
+import { useQuery } from '@tanstack/react-query';
 
-const products = [
-  { id: '1', name: 'Bun Dau Mam Tom', price: '$40', image: require('../assets/bun.jpg') },
-  { id: '2', name: 'Pho Bo', price: '$50', image: require('../assets/pho.jpg') },
-  { id: '3', name: 'Goi Cuon', price: '$30', image: require('../assets/bun.jpg') },
-  { id: '4', name: 'Com Tam', price: '$35', image: require('../assets/pho.jpg') },
-];
+// const products = [
+//   { id: '1', name: 'Bun Dau Mam Tom', price: '$40', image: require('../assets/bun.jpg') },
+//   { id: '2', name: 'Pho Bo', price: '$50', image: require('../assets/pho.jpg') },
+//   { id: '3', name: 'Goi Cuon', price: '$30', image: require('../assets/bun.jpg') },
+//   { id: '4', name: 'Com Tam', price: '$35', image: require('../assets/pho.jpg') },
+// ];
 
 const HomeScreen = () => {
+  const apiUrl = `${baseUrl}/api/products`;
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(apiUrl);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching data: ${error.message}`);
+      throw error; 
+    }
+  };
+
+  const { data: products=[], error, isLoading } = useQuery({
+    queryFn: fetchData,
+    queryKey: ['products'],
+  });
+
+
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProducts = products.filter(product =>
@@ -39,7 +60,7 @@ const HomeScreen = () => {
       <FlatList
         data={filteredProducts} 
         renderItem={({ item }) => (
-          <ProductCard id={item.id} name={item.name} price={item.price} image={item.image} />
+          <ProductCard id={item.id} name={item.name} price={item.price} image={{uri: `${baseUrl}/storage/${item.image}`}} />
         )}
         keyExtractor={item => item.id}
         numColumns={2}

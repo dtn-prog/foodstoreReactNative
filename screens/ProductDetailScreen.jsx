@@ -16,7 +16,9 @@ const ProductDetailScreen = ({ route }) => {
   };
 
   const handleAddToCart = () => {
-    addItem({ id, name, price: parseFloat(price.replace('$', '')), quantity, image });
+    const numericPrice = typeof price === 'number' ? price : 0; // Default to 0 if price is not a number
+    addItem({ id, name, price: numericPrice, quantity, image });
+    
     ToastAndroid.showWithGravity(
       `${quantity} x ${name} has been added to your cart.`,
       ToastAndroid.SHORT,
