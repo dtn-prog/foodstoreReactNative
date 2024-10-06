@@ -7,13 +7,6 @@ import axios from 'axios';
 import { baseUrl } from '../api';
 import { useQuery } from '@tanstack/react-query';
 
-// const products = [
-//   { id: '1', name: 'Bun Dau Mam Tom', price: '$40', image: require('../assets/bun.jpg') },
-//   { id: '2', name: 'Pho Bo', price: '$50', image: require('../assets/pho.jpg') },
-//   { id: '3', name: 'Goi Cuon', price: '$30', image: require('../assets/bun.jpg') },
-//   { id: '4', name: 'Com Tam', price: '$35', image: require('../assets/pho.jpg') },
-// ];
-
 const HomeScreen = () => {
   const apiUrl = `${baseUrl}/api/products`;
 
