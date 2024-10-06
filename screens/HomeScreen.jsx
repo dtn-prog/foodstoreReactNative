@@ -1,4 +1,4 @@
-import { View, TextInput, FlatList } from 'react-native';
+import { View, TextInput, FlatList, ActivityIndicator, Text } from 'react-native';
 import React, { useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Header from '../components/Header';
@@ -20,11 +20,10 @@ const HomeScreen = () => {
     }
   };
 
-  const { data: products=[], error, isLoading } = useQuery({
+  const { data: products = [], error, isLoading } = useQuery({
     queryFn: fetchData,
     queryKey: ['products'],
   });
-
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -49,17 +48,34 @@ const HomeScreen = () => {
         />
       </View>
 
-      {/* Products Grid */}
-      <FlatList
-        data={filteredProducts} 
-        renderItem={({ item }) => (
-          <ProductCard id={item.id} name={item.name} price={item.price} image={{uri: `${baseUrl}/storage/${item.image}`}} />
-        )}
-        keyExtractor={item => item.id}
-        numColumns={2}
-        contentContainerStyle={{ paddingBottom: 20, justifyContent: 'space-between' }}
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
-      />
+      {/* Loading and Error Handling */}
+      {isLoading ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text className="mt-2">Loading products...</Text>
+        </View>
+      ) : error ? (
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-red-500">Error fetching products: {error.message}</Text>
+        </View>
+      ) : (
+        // Products Grid
+        <FlatList
+          data={filteredProducts} 
+          renderItem={({ item }) => (
+            <ProductCard 
+              id={item.id} 
+              name={item.name} 
+              price={item.price} 
+              image={{ uri: `${baseUrl}/storage/${item.image}` }} 
+            />
+          )}
+          keyExtractor={item => item.id.toString()} // Ensure id is a string
+          numColumns={2}
+          contentContainerStyle={{ paddingBottom: 20, justifyContent: 'space-between' }}
+          columnWrapperStyle={{ justifyContent: 'space-between' }}
+        />
+      )}
     </View>
   );
 };
