@@ -8,19 +8,30 @@ import CartScreen from './screens/CartScreen';
 import { CartProvider } from './context/CartContext';
 import AccountScreen from './screens/AccountScreen';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScren';
+import ReorderScreen from './screens/ReorderScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const HomeStack = () => {
   return(
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={HomeScreen}/>
-      <Stack.Screen name="ProductDetail" component={ProductDetailScreen}/>
-    </Stack.Navigator>
+  <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Screen name="Home" component={HomeScreen}/>
+    <Stack.Screen name="ProductDetail" component={ProductDetailScreen}/>
+  </Stack.Navigator>
   )
 };
+
+const AccountStack = () => {
+  return(
+  <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Screen name="Login" component={LoginScreen}/>
+    <Stack.Screen name="Register" component={RegisterScreen}/>
+  </Stack.Navigator>
+  )
+}
 
 export default function App() {
   const queryCLient = new QueryClient();
@@ -34,11 +45,11 @@ export default function App() {
           }}>
             <Tab.Screen name="HomeStack" component={HomeStack} 
             options={{tabBarIcon:()=><Entypo name="home" size={24} color="black" />}}/>
-            <Tab.Screen name="Reorder" component={HomeScreen} 
+            <Tab.Screen name="Reorder" component={ReorderScreen} 
             options={{tabBarIcon:()=><Entypo name="list" size={24} color="black" />}}/>
             <Tab.Screen name="Cart" component={CartScreen} 
             options={{tabBarIcon:()=><Entypo name="shopping-cart" size={24} color="black" />}}/>
-            <Tab.Screen name="Account" component={AccountScreen} 
+            <Tab.Screen name="Account" component={AccountStack} 
             options={{tabBarIcon:()=><Entypo name="user" size={24} color="black" />}}/>
           </Tab.Navigator>
         </NavigationContainer>
