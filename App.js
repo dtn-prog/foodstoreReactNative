@@ -27,6 +27,7 @@ const HomeStack = () => {
 const AccountStack = () => {
   return(
   <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Screen name="Account" component={AccountScreen}/>
     <Stack.Screen name="Login" component={LoginScreen}/>
     <Stack.Screen name="Register" component={RegisterScreen}/>
   </Stack.Navigator>

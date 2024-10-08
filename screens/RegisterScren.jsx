@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Text, Alert } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 import { baseUrl } from '../api';
 
 const RegisterScreen = ({ navigation }) => {
@@ -10,16 +11,28 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      const token = await SecureStore.getItemAsync('userToken');
+      if (token) {
+        navigation.navigate('Account'); 
+      }
+    };
+
+    checkLoggedIn();
+  }, []);
+
   const mutation = useMutation({
     mutationFn: async (userData) => {
       const response = await axios.post(`${baseUrl}/api/register`, userData);
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const { user, token } = data; 
       Alert.alert('Registration successful', `Welcome, ${user.name}!`);
-      console.log(user)
-      navigation.navigate('Home'); 
+
+      await SecureStore.setItemAsync('userToken', token);
+      navigation.navigate('Account'); 
     },
     onError: (error) => {
       Alert.alert('Registration failed', error.response?.data?.message || 'An error occurred');
