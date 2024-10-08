@@ -17,8 +17,6 @@ const LoginScreen = ({ navigation }) => {
       const { user, token } = data; 
       Alert.alert('Login successful', `Welcome back, ${user.name}!`);
       console.log(user);
-      // Store the token and navigate to the Home screen
-      // You might want to use AsyncStorage or a similar method to store the token
       navigation.navigate('Home'); 
     },
     onError: (error) => {
