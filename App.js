@@ -11,47 +11,69 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScren';
 import ReorderScreen from './screens/ReorderScreen';
+import MapScreen from './screens/MapScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const HomeStack = () => {
-  return(
-  <Stack.Navigator screenOptions={{headerShown: false}}>
-    <Stack.Screen name="Home" component={HomeScreen}/>
-    <Stack.Screen name="ProductDetail" component={ProductDetailScreen}/>
+const HomeStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Home" component={HomeScreen} />
+    <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
   </Stack.Navigator>
-  )
-};
+);
 
-const AccountStack = () => {
-  return(
-  <Stack.Navigator screenOptions={{headerShown: false}}>
-    <Stack.Screen name="Account" component={AccountScreen}/>
-    <Stack.Screen name="Login" component={LoginScreen}/>
-    <Stack.Screen name="Register" component={RegisterScreen}/>
+const AccountStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Account" component={AccountScreen} />
+    <Stack.Screen name="Login" component={LoginScreen} />
+    <Stack.Screen name="Register" component={RegisterScreen} />
   </Stack.Navigator>
-  )
-}
+);
 
 export default function App() {
-  const queryCLient = new QueryClient();
+  const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryCLient}>
+    <QueryClientProvider client={queryClient}>
       <CartProvider>
         <NavigationContainer>
-          <Tab.Navigator screenOptions={{
-            headerShown: false, tabBarActiveTintColor: 'blue'
-          }}>
-            <Tab.Screen name="HomeStack" component={HomeStack} 
-            options={{tabBarIcon:()=><Entypo name="home" size={24} color="black" />}}/>
-            <Tab.Screen name="Reorder" component={ReorderScreen} 
-            options={{tabBarIcon:()=><Entypo name="list" size={24} color="black" />}}/>
-            <Tab.Screen name="Cart" component={CartScreen} 
-            options={{tabBarIcon:()=><Entypo name="shopping-cart" size={24} color="black" />}}/>
-            <Tab.Screen name="Account" component={AccountStack} 
-            options={{tabBarIcon:()=><Entypo name="user" size={24} color="black" />}}/>
+          <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: 'blue' }}>
+            <Tab.Screen
+              name="HomeStack"
+              component={HomeStack}
+              options={{
+                tabBarIcon: () => <Entypo name="home" size={24} color="black" />,
+              }}
+            />
+            {/* <Tab.Screen
+              name="Reorder"
+              component={ReorderScreen}
+              options={{
+                tabBarIcon: () => <Entypo name="list" size={24} color="black" />,
+              }}
+            /> */}
+            <Tab.Screen
+              name="Cart"
+              component={CartScreen}
+              options={{
+                tabBarIcon: () => <Entypo name="shopping-cart" size={24} color="black" />,
+              }}
+            />
+            <Tab.Screen
+              name="Map" 
+              component={MapScreen}
+              options={{
+                tabBarIcon: () => <Entypo name="map" size={24} color="black" />,
+              }}
+            />
+            <Tab.Screen
+              name="Account"
+              component={AccountStack}
+              options={{
+                tabBarIcon: () => <Entypo name="user" size={24} color="black" />,
+              }}
+            />
           </Tab.Navigator>
         </NavigationContainer>
       </CartProvider>
