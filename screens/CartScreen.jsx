@@ -1,12 +1,29 @@
-import { Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 import Header from '../components/Header';
+import * as SecureStore from 'expo-secure-store';
 
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem } = useContext(CartContext);
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  
+  const checkLoggedIn = async () => {
+    const token = await SecureStore.getItemAsync('userToken');
+    if(!token) {
+      Alert.alert('Login Required', 'Please log in to proceed with checkout.');
+      return;
+    } else {
+      Alert.alert('Login', 'already loggined');
+      return;
+    }
+  };
+
+  handleCheckout = () => {
+    checkLoggedIn()
+  }
+
 
   const renderItem = ({ item }) => (
     <View className="flex-row items-center p-4 my-2 bg-white rounded-lg shadow">
@@ -42,7 +59,7 @@ const CartScreen = () => {
       <View className="p-4 bg-white border-t border-gray-300">
         <Text className="text-2xl font-bold text-right">Total: ${totalPrice.toFixed(2)}</Text>
       </View>
-      <TouchableOpacity className="p-4 mx-4 my-2 bg-blue-500 rounded-lg">
+      <TouchableOpacity onPress={handleCheckout} className="p-4 mx-4 my-2 bg-blue-500 rounded-lg">
         <Text className="text-lg font-bold text-center text-white">Checkout</Text>
       </TouchableOpacity>
     </View>
