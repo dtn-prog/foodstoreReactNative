@@ -93,7 +93,7 @@ const CartScreen = () => {
         </View>
       </View>
       <Text className="text-lg font-bold text-gray-800">
-        ${(item.price * item.quantity).toFixed(2)}
+        ${(item.price * item.quantity)}
       </Text>
     </View>
   );
@@ -109,7 +109,7 @@ const CartScreen = () => {
       />
       <View className="p-4 bg-white border-t border-gray-300">
         <Text className="text-2xl font-bold text-right">
-          Total: ${totalPrice.toFixed(2)}
+          Total: ${totalPrice}
         </Text>
       </View>
 
@@ -127,13 +127,13 @@ const CartScreen = () => {
       </View>
 
       {/* Display Current Location */}
-      {location && (
+      {/* {location && (
         <View className="p-4">
           <Text className="text-lg font-bold">Shipping Location:</Text>
           <Text>Latitude: {location.coords.latitude}</Text>
           <Text>Longitude: {location.coords.longitude}</Text>
         </View>
-      )}
+      )} */}
 
       <TouchableOpacity
         onPress={handleCheckout}

@@ -149,7 +149,7 @@ const MapScreen = () => {
         )}
       </MapView>
 
-      <View style={styles.searchContainer}>
+      {/* <View style={styles.searchContainer}>
         <GooglePlacesAutocomplete
           placeholder='Search'
           onPress={(data, details = null) => {
@@ -177,7 +177,7 @@ const MapScreen = () => {
             listView: styles.listView,
           }}
         />
-      </View>
+      </View> */}
 
       {distance && (
         <View style={styles.distanceContainer}>
