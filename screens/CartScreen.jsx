@@ -12,12 +12,17 @@ import { CartContext } from "../context/CartContext";
 import Header from "../components/Header";
 import * as SecureStore from "expo-secure-store";
 import * as Location from "expo-location";
+import { baseUrl } from "../api";
+import axios from "axios";
+import { GOMAP_API_KEY } from "../enviroment";
 
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem } = useContext(CartContext);
   
   const [address, setAddress] = useState(""); 
   const [location, setLocation] = useState(null);
+  const [restaurantLocation, setRestaurantLocation] = useState(null);
+  const [duration, setDuration] = useState(null);
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -36,24 +41,40 @@ const CartScreen = () => {
       setLocation(currentLocation);
 
       const addressResult = await Location.reverseGeocodeAsync(currentLocation.coords);
-      console.log('Address result:', addressResult);
       if (addressResult.length > 0) {
         const { formattedAddress } = addressResult[0];
         setAddress(formattedAddress);
-        // console.log('Fetched address:', formattedAddress);
-      } else {
-        console.log('No address found for the current location.');
       }
+
+      fetchRestaurantLocation(currentLocation.coords);
     })();
   }, []);
+
+  const fetchRestaurantLocation = async (coords) => {
+    const apiUrl = `${baseUrl}/api/location`;
+    try {
+      const response = await axios.get(apiUrl);
+      setRestaurantLocation(response.data);
+
+      const durationResponse = await axios.get(
+        `https://maps.gomaps.pro/maps/api/directions/json?origin=${coords.latitude},${coords.longitude}&destination=${response.data.lat},${response.data.long}&mode=driving&key=${GOMAP_API_KEY}`
+      );
+
+      if (durationResponse.data.routes.length > 0) {
+        const durationText = durationResponse.data.routes[0].legs[0].duration.text;
+        setDuration(durationText);
+      }
+    } catch (error) {
+      console.error("Error fetching restaurant location:", error);
+      Alert.alert("Error", "Could not fetch restaurant location.");
+    }
+  };
 
   const checkLoggedIn = async () => {
     const token = await SecureStore.getItemAsync("userToken");
     if (!token) {
       Alert.alert("Login Required", "Please log in to proceed with checkout.");
       return;
-    } else {
-      Alert.alert("Login", "Already logged in");
     }
   };
 
@@ -126,14 +147,12 @@ const CartScreen = () => {
         />
       </View>
 
-      {/* Display Current Location */}
-      {/* {location && (
+      {/* Display Current Location Duration */}
+      {duration && (
         <View className="p-4">
-          <Text className="text-lg font-bold">Shipping Location:</Text>
-          <Text>Latitude: {location.coords.latitude}</Text>
-          <Text>Longitude: {location.coords.longitude}</Text>
+          <Text className="text-lg font-bold">Estimated Delivery Duration: {duration}</Text>
         </View>
-      )} */}
+      )}
 
       <TouchableOpacity
         onPress={handleCheckout}

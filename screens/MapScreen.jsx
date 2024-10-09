@@ -7,8 +7,6 @@ import { useQuery } from '@tanstack/react-query';
 import { baseUrl } from '../api'; 
 import Entypo from '@expo/vector-icons/Entypo';
 import { GOMAP_API_KEY } from '../enviroment';
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import MapViewDirections from "react-native-maps-directions";
 
 const MapScreen = () => {
   const apiUrl = `${baseUrl}/api/location`;
@@ -37,6 +35,7 @@ const MapScreen = () => {
 
   const [currentLocation, setCurrentLocation] = useState(null);
   const [address, setAddress] = useState('');
+  const [restaurantAddress, setRestaurantAddress] = useState('');
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
@@ -60,15 +59,22 @@ const MapScreen = () => {
 
       // Get address from coordinates
       const addressResult = await Location.reverseGeocodeAsync(location.coords);
-      console.log('Address result:', addressResult);
       if (addressResult.length > 0) {
         const { formattedAddress } = addressResult[0];
         setAddress(formattedAddress);
-      } else {
-        console.log('No address found for the current location.');
       }
 
       if (restaurantLocation) {
+        // Get restaurant address from coordinates
+        const restaurantAddressResult = await Location.reverseGeocodeAsync({
+          latitude: restaurantLocation.lat,
+          longitude: restaurantLocation.long,
+        });
+        if (restaurantAddressResult.length > 0) {
+          const { formattedAddress } = restaurantAddressResult[0];
+          setRestaurantAddress(formattedAddress);
+        }
+
         try {
           const response = await axios.get(
             `https://maps.gomaps.pro/maps/api/directions/json?origin=${location.coords.latitude},${location.coords.longitude}&destination=${restaurantLocation.lat},${restaurantLocation.long}&mode=driving&key=${GOMAP_API_KEY}`
@@ -133,7 +139,7 @@ const MapScreen = () => {
               longitude: restaurantLocation.long,
             }}
             title="Fastfood365"
-            description="Your favorite fast food place!"
+            description={restaurantAddress || "Fetching restaurant address..."}
           >
             <Entypo name="home" size={30} color="blue" />
           </Marker>
@@ -149,41 +155,12 @@ const MapScreen = () => {
         )}
       </MapView>
 
-      {/* <View style={styles.searchContainer}>
-        <GooglePlacesAutocomplete
-          placeholder='Search'
-          onPress={(data, details = null) => {
-            console.log("Selected Place:", data, details);
-            if (details) {
-              const { lat, lng } = details.geometry.location;
-              setRegion({
-                latitude: lat,
-                longitude: lng,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              });
-              setCurrentLocation({ latitude: lat, longitude: lng });
-            }
-          }}
-          query={{
-            key: GOMAP_API_KEY,
-            language: 'en',
-            types: ['(cities)'],
-          }}
-          fetchDetails={true}
-          styles={{
-            textInput: styles.textInput,
-            container: styles.autocompleteContainer,
-            listView: styles.listView,
-          }}
-        />
-      </View> */}
-
       {distance && (
         <View style={styles.distanceContainer}>
           <Text style={styles.distanceText}>Distance to Fastfood365: {distance}</Text>
           {duration && <Text style={styles.distanceText}>Estimated Travel Time: {duration}</Text>} 
-          {address && <Text style={styles.distanceText}>Shipping Address: {address}</Text>} 
+          {address && <Text style={styles.distanceText}>Your Address: {address}</Text>} 
+          {restaurantAddress && <Text style={styles.distanceText}>Restaurant Address: {restaurantAddress}</Text>} 
         </View>
       )}
     </View>
