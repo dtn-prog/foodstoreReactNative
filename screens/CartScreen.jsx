@@ -14,8 +14,7 @@ import * as SecureStore from "expo-secure-store";
 import * as Location from "expo-location";
 
 const CartScreen = () => {
-  const { cartItems, increaseQuantity, decreaseQuantity, removeItem } =
-    useContext(CartContext);
+  const { cartItems, increaseQuantity, decreaseQuantity, removeItem } = useContext(CartContext);
   
   const [address, setAddress] = useState(""); 
   const [location, setLocation] = useState(null);
@@ -35,6 +34,16 @@ const CartScreen = () => {
 
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation);
+
+      const addressResult = await Location.reverseGeocodeAsync(currentLocation.coords);
+      console.log('Address result:', addressResult);
+      if (addressResult.length > 0) {
+        const { formattedAddress } = addressResult[0];
+        setAddress(formattedAddress);
+        // console.log('Fetched address:', formattedAddress);
+      } else {
+        console.log('No address found for the current location.');
+      }
     })();
   }, []);
 
@@ -120,7 +129,7 @@ const CartScreen = () => {
       {/* Display Current Location */}
       {location && (
         <View className="p-4">
-          <Text className="text-lg font-bold">shipping Location:</Text>
+          <Text className="text-lg font-bold">Shipping Location:</Text>
           <Text>Latitude: {location.coords.latitude}</Text>
           <Text>Longitude: {location.coords.longitude}</Text>
         </View>
