@@ -7,10 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { baseUrl } from '../api'; 
 import Entypo from '@expo/vector-icons/Entypo';
 import { GOMAP_API_KEY } from '../enviroment';
-import {
-  GooglePlaceDetail,
-  GooglePlacesAutocomplete,
-} from "react-native-google-places-autocomplete";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
 
 const MapScreen = () => {
@@ -67,7 +64,6 @@ const MapScreen = () => {
       if (addressResult.length > 0) {
         const { formattedAddress } = addressResult[0];
         setAddress(formattedAddress);
-        // console.log('Fetched address:', formattedAddress);
       } else {
         console.log('No address found for the current location.');
       }
@@ -148,19 +144,48 @@ const MapScreen = () => {
           <Polyline
             coordinates={routeCoordinates}
             strokeColor="red" 
-            strokeWidth={1} 
+            strokeWidth={3} 
           />
         )}
       </MapView>
+
+      <View style={styles.searchContainer}>
+        <GooglePlacesAutocomplete
+          placeholder='Search'
+          onPress={(data, details = null) => {
+            console.log("Selected Place:", data, details);
+            if (details) {
+              const { lat, lng } = details.geometry.location;
+              setRegion({
+                latitude: lat,
+                longitude: lng,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              });
+              setCurrentLocation({ latitude: lat, longitude: lng });
+            }
+          }}
+          query={{
+            key: GOMAP_API_KEY,
+            language: 'en',
+            types: ['(cities)'],
+          }}
+          fetchDetails={true}
+          styles={{
+            textInput: styles.textInput,
+            container: styles.autocompleteContainer,
+            listView: styles.listView,
+          }}
+        />
+      </View>
+
       {distance && (
         <View style={styles.distanceContainer}>
-          <Text>Distance to Fastfood365: {distance}</Text>
-          {duration && <Text>Estimated Travel Time: {duration}</Text>} 
-          {address && <Text>shipping address: {address}</Text>} 
+          <Text style={styles.distanceText}>Distance to Fastfood365: {distance}</Text>
+          {duration && <Text style={styles.distanceText}>Estimated Travel Time: {duration}</Text>} 
+          {address && <Text style={styles.distanceText}>Shipping Address: {address}</Text>} 
         </View>
       )}
-
-
     </View>
   );
 };
@@ -171,20 +196,51 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+    marginBottom: 60, 
+  },
+  searchContainer: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  textInput: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+  },
+  autocompleteContainer: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  listView: {
+    backgroundColor: 'white',
+    borderRadius: 5,
   },
   distanceContainer: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 10,
     left: 20,
     right: 20,
     backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
+    padding: 15,
+    borderRadius: 10,
     elevation: 3,
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  distanceText: {
+    fontSize: 16,
+    marginBottom: 5,
   },
   loadingText: {
     textAlign: 'center',
