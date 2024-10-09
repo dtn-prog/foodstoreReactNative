@@ -18,7 +18,7 @@ const CartScreen = () => {
     useContext(CartContext);
   
   const [address, setAddress] = useState(""); 
-  const [location, setLocation] = useState(null); // State for location
+  const [location, setLocation] = useState(null);
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -27,14 +27,12 @@ const CartScreen = () => {
 
   useEffect(() => {
     (async () => {
-      // Request permission to access location
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert("Permission Denied", "Location access is required to get your current location.");
         return;
       }
 
-      // Get current location
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation);
     })();

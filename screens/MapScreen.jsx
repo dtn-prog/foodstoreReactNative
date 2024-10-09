@@ -35,7 +35,7 @@ const MapScreen = () => {
 
   const [currentLocation, setCurrentLocation] = useState(null);
   const [distance, setDistance] = useState(null);
-  const [duration, setDuration] = useState(null); // State for duration
+  const [duration, setDuration] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
 
   useEffect(() => {
@@ -64,9 +64,9 @@ const MapScreen = () => {
           const route = response.data.routes[0];
           if (route && route.legs.length > 0) {
             const distanceText = route.legs[0].distance.text;
-            const durationText = route.legs[0].duration.text; // Get duration
+            const durationText = route.legs[0].duration.text;
             setDistance(distanceText);
-            setDuration(durationText); // Set duration
+            setDuration(durationText);
 
             const points = route.legs[0].steps.map(step => {
               const { start_location } = step;
@@ -109,7 +109,7 @@ const MapScreen = () => {
             coordinate={currentLocation}
             title="Your Location"
             description="You are here"
-            pinColor="green" // Customize pin color
+            pinColor="green"
           />
         )}
 
