@@ -5,20 +5,40 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  TextInput,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 import Header from "../components/Header";
 import * as SecureStore from "expo-secure-store";
+import * as Location from "expo-location";
 
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem } =
     useContext(CartContext);
+  
+  const [address, setAddress] = useState(""); 
+  const [location, setLocation] = useState(null); // State for location
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  useEffect(() => {
+    (async () => {
+      // Request permission to access location
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert("Permission Denied", "Location access is required to get your current location.");
+        return;
+      }
+
+      // Get current location
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+    })();
+  }, []);
 
   const checkLoggedIn = async () => {
     const token = await SecureStore.getItemAsync("userToken");
@@ -26,12 +46,15 @@ const CartScreen = () => {
       Alert.alert("Login Required", "Please log in to proceed with checkout.");
       return;
     } else {
-      Alert.alert("Login", "already loggined");
-      return;
+      Alert.alert("Login", "Already logged in");
     }
   };
 
-  handleCheckout = () => {
+  const handleCheckout = () => {
+    if (!address) {
+      Alert.alert("Address Required", "Please enter your address.");
+      return;
+    }
     checkLoggedIn();
   };
 
@@ -74,14 +97,37 @@ const CartScreen = () => {
       <FlatList
         data={cartItems}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle="pb-24"
+        keyExtractor={(item) => item.id.toString()} 
+        contentContainerStyle={{ paddingBottom: 100 }} 
       />
       <View className="p-4 bg-white border-t border-gray-300">
         <Text className="text-2xl font-bold text-right">
           Total: ${totalPrice.toFixed(2)}
         </Text>
       </View>
+
+      {/* Address Input Field */}
+      <View className="p-4">
+        <Text className="mb-2 text-lg font-bold">Shipping Address</Text>
+        <TextInput
+          value={address}
+          onChangeText={setAddress}
+          placeholder="Enter your address"
+          className="p-2 rounded border border-gray-300"
+          multiline
+          numberOfLines={3}
+        />
+      </View>
+
+      {/* Display Current Location */}
+      {location && (
+        <View className="p-4">
+          <Text className="text-lg font-bold">Current Location:</Text>
+          <Text>Latitude: {location.coords.latitude}</Text>
+          <Text>Longitude: {location.coords.longitude}</Text>
+        </View>
+      )}
+
       <TouchableOpacity
         onPress={handleCheckout}
         className="p-4 mx-4 my-2 bg-blue-500 rounded-lg"
