@@ -16,6 +16,29 @@ import { baseUrl } from "../api";
 import axios from "axios";
 import { GOMAP_API_KEY } from "../enviroment";
 
+// the example of json that need to be sent
+// {
+//   "lat": 12,
+//   "long": 100,
+//   "address": "address 1",
+//   "duration": "5 min",
+//   "items": [
+//     {
+//       "product_id": 3,
+//       "quantity": 1
+//     },
+//     {
+//       "product_id": 1,
+//       "quantity": 1
+//     }
+//   ]
+// }
+
+// the response success is the total price
+// {
+//   "totalPrice": 83
+// }
+
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem } = useContext(CartContext);
   
