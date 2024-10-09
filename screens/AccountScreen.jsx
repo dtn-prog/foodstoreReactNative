@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, Button, Alert, FlatList, Image } from 'react-native';
+import { View, Text, Button, ToastAndroid, FlatList, Image } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { baseUrl } from '../api';
 import axios from 'axios';
@@ -52,7 +52,11 @@ const AccountScreen = ({ navigation }) => {
 
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync('userToken');
-    Alert.alert('Logged Out', 'You have been logged out.');
+    ToastAndroid.showWithGravity(
+      'You have been logged out.',
+      ToastAndroid.SHORT,
+      ToastAndroid.TOP
+    );
     navigation.navigate('Login');
   };
 
@@ -84,7 +88,11 @@ const AccountScreen = ({ navigation }) => {
   }
 
   if (error) {
-    return <Text className="text-lg text-center text-red-500">Error fetching order history: {error.message}</Text>;
+    return (
+      <Text className="text-lg text-center text-red-500">
+        Error fetching order history: {error.message}
+      </Text>
+    );
   }
 
   return (

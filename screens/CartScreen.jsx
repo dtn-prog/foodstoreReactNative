@@ -4,7 +4,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  Alert,
+  ToastAndroid,
   TextInput,
   ActivityIndicator,
 } from "react-native";
@@ -36,7 +36,11 @@ const CartScreen = () => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert("Permission Denied", "Location access is required to get your current location.");
+        ToastAndroid.showWithGravity(
+          "Location access is required to get your current location.",
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP
+        );
         return;
       }
 
@@ -69,14 +73,22 @@ const CartScreen = () => {
       }
     } catch (error) {
       console.error("Error fetching restaurant location:", error);
-      Alert.alert("Error", "Could not fetch restaurant location.");
+      ToastAndroid.showWithGravity(
+        "Could not fetch restaurant location.",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
     }
   };
 
   const checkLoggedIn = async () => {
     const token = await SecureStore.getItemAsync("userToken");
     if (!token) {
-      Alert.alert("Login Required", "Please log in to proceed with checkout.");
+      ToastAndroid.showWithGravity(
+        "Please log in to proceed with checkout.",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return false;
     }
     return token;
@@ -84,7 +96,11 @@ const CartScreen = () => {
 
   const handleCheckout = async () => {
     if (!address) {
-      Alert.alert("Address Required", "Please enter your address.");
+      ToastAndroid.showWithGravity(
+        "Please enter your address.",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return;
     }
 
@@ -119,15 +135,23 @@ const CartScreen = () => {
     },
     onSuccess: (data) => {
       setLoading(false);
-      Alert.alert("Checkout Successful", `Total Price: $${data.totalPrice}`);
+      ToastAndroid.showWithGravity(
+        `Checkout Successful! Total Price: $${data.totalPrice}`,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       clearCart();
       
       // Invalidate cache
-      queryClient.invalidateQueries({ queryKey: ['orderHistory'] })
+      queryClient.invalidateQueries({ queryKey: ['orderHistory'] });
     },
     onError: (error) => {
       setLoading(false);
-      Alert.alert("Checkout Failed", "There was an error processing your order.");
+      ToastAndroid.showWithGravity(
+        "There was an error processing your order.",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       console.error(error);
     },
   });

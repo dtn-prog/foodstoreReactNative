@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Text, Alert } from 'react-native';
+import { View, TextInput, Button, Text, ToastAndroid } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
@@ -29,19 +29,31 @@ const RegisterScreen = ({ navigation }) => {
     },
     onSuccess: async (data) => {
       const { user, token } = data; 
-      Alert.alert('Registration successful', `Welcome, ${user.name}!`);
+      ToastAndroid.showWithGravity(
+        `Welcome, ${user.name}!`,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
 
       await SecureStore.setItemAsync('userToken', token);
       navigation.navigate('Account'); 
     },
     onError: (error) => {
-      Alert.alert('Registration failed', error.response?.data?.message || 'An error occurred');
+      ToastAndroid.showWithGravity(
+        error.response?.data?.message || 'An error occurred',
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
     },
   });
 
   const handleRegister = () => {
     if (password !== passwordConfirm) {
-      Alert.alert('Error', 'Passwords do not match');
+      ToastAndroid.showWithGravity(
+        'Passwords do not match',
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return;
     }
 
