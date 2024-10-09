@@ -34,7 +34,7 @@ const HomeScreen = () => {
   return (
     <View className="flex-1 bg-white">
       {/* Header */}
-      <Header />
+      {/* <Header /> */}
 
       {/* Search Bar */}
       <View className="flex-row items-center p-4">

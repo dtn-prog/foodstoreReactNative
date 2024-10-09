@@ -87,7 +87,7 @@ const CartScreen = () => {
   };
 
   const renderItem = ({ item }) => (
-    <View className="flex-row items-center p-4 my-2 bg-white rounded-lg shadow">
+    <View className="flex-row items-center p-4 my-2 bg-white rounded-lg shadow-md">
       <Image source={item.image} className="w-16 h-16 rounded-lg" />
       <View className="flex-1 ml-4">
         <Text className="text-lg font-bold">{item.name}</Text>
@@ -121,44 +121,45 @@ const CartScreen = () => {
 
   return (
     <View className="flex-1 bg-gray-100">
-      <Header />
+      {/* <Header /> */}
       <FlatList
         data={cartItems}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()} 
         contentContainerStyle={{ paddingBottom: 100 }} 
       />
-      <View className="p-4 bg-white border-t border-gray-300">
+      <View className="p-1 bg-white border-t border-gray-300">
         <Text className="text-2xl font-bold text-right">
           Total: ${totalPrice}
         </Text>
       </View>
 
       {/* Address Input Field */}
-      <View className="p-4">
-        <Text className="mb-2 text-lg font-bold">Shipping Address</Text>
+      <View className="p-1 mx-2">
+        <Text className="mb-1 text-base font-bold">Shipping Address</Text>
         <TextInput
           value={address}
           onChangeText={setAddress}
           placeholder="Enter your address"
-          className="p-2 rounded border border-gray-300"
+          className="p-1 bg-white rounded border border-gray-300"
           multiline
-          numberOfLines={3}
+          numberOfLines={1} 
+          style={{ maxHeight: 40 }}
         />
       </View>
 
       {/* Display Current Location Duration */}
-      {duration && (
-        <View className="p-4">
-          <Text className="text-lg font-bold">Estimated Delivery Duration: {duration}</Text>
+      {/* {duration && (
+        <View className="p-1 mx-2 mt-1">
+          <Text className="text-base font-bold">Delivery Duration: {duration}</Text>
         </View>
-      )}
+      )} */}
 
       <TouchableOpacity
         onPress={handleCheckout}
-        className="p-4 mx-4 my-2 bg-blue-500 rounded-lg"
+        className="p-2 mx-2 my-1 bg-blue-500 rounded"
       >
-        <Text className="text-lg font-bold text-center text-white">
+        <Text className="text-base font-bold text-center text-white">
           Checkout
         </Text>
       </TouchableOpacity>
