@@ -1,7 +1,13 @@
 import {
   Text,
   View,
-  FlatList,TouchableOpacity,Image,Alert,TextInput,ActivityIndicator,} from "react-native";
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Alert,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 import * as SecureStore from "expo-secure-store";
@@ -9,10 +15,11 @@ import * as Location from "expo-location";
 import { baseUrl } from "../api";
 import axios from "axios";
 import { GOMAP_API_KEY } from "../enviroment";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem, clearCart } = useContext(CartContext);
+  const queryClient = useQueryClient();
   
   const [address, setAddress] = useState(""); 
   const [location, setLocation] = useState(null);
@@ -114,6 +121,9 @@ const CartScreen = () => {
       setLoading(false);
       Alert.alert("Checkout Successful", `Total Price: $${data.totalPrice}`);
       clearCart();
+      
+      // Invalidate the order history query to refetch it
+      queryClient.invalidateQueries({ queryKey: ['orderHistory'] })
     },
     onError: (error) => {
       setLoading(false);

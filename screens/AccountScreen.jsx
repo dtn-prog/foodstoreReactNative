@@ -22,7 +22,7 @@ const AccountScreen = ({ navigation }) => {
   const { data: orderHistory, isLoading, error } = useQuery({
     queryKey: ['orderHistory'],
     queryFn: fetchOrderHistory,
-    enabled: false,
+    enabled: true,
     refetchOnWindowFocus: false,
   });
 
@@ -44,9 +44,7 @@ const AccountScreen = ({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      queryClient.refetchQueries({
-        queryKey: ['orderHistory'],
-      });
+      queryClient.refetchQueries({ queryKey: ['orderHistory'] });
     });
 
     return unsubscribe;
@@ -91,7 +89,6 @@ const AccountScreen = ({ navigation }) => {
 
   return (
     <View className="flex-1 p-4 bg-gray-100">
-      {/* <Text className="mb-6 text-2xl font-bold text-center">Account Screen</Text> */}
       <Button title="Logout" onPress={handleLogout} />
       <Text className="mt-6 mb-2 text-lg text-center">Order History:</Text>
       <FlatList
