@@ -12,6 +12,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScren';
 import ReorderScreen from './screens/ReorderScreen';
 import MapScreen from './screens/MapScreen';
+import 'react-native-get-random-values';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();

@@ -22,6 +22,8 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.74.5",
+    "react-native-get-random-values": "^1.11.0",
+    "react-native-google-places-autocomplete": "^2.5.7",
     "react-native-heroicons": "^4.0.0",
     "react-native-maps": "1.14.0",
     "react-native-maps-directions": "^1.9.0",
