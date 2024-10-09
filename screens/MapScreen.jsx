@@ -11,6 +11,7 @@ import {
   GooglePlaceDetail,
   GooglePlacesAutocomplete,
 } from "react-native-google-places-autocomplete";
+import MapViewDirections from "react-native-maps-directions";
 
 const MapScreen = () => {
   const apiUrl = `${baseUrl}/api/location`;
