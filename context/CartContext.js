@@ -55,8 +55,13 @@ const CartProvider = ({ children }) => {
     );
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+    AsyncStorage.removeItem('cart');
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addItem, removeItem, increaseQuantity, decreaseQuantity }}>
+    <CartContext.Provider value={{ cartItems, addItem, removeItem, increaseQuantity, decreaseQuantity, clearCart }}>
       {children}
     </CartContext.Provider>
   );

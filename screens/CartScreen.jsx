@@ -1,51 +1,24 @@
 import {
   Text,
   View,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  Alert,
-  TextInput,
-} from "react-native";
+  FlatList,TouchableOpacity,Image,Alert,TextInput,ActivityIndicator,} from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
-import Header from "../components/Header";
 import * as SecureStore from "expo-secure-store";
 import * as Location from "expo-location";
 import { baseUrl } from "../api";
 import axios from "axios";
 import { GOMAP_API_KEY } from "../enviroment";
-
-// the example of json that need to be sent
-// {
-//   "lat": 12,
-//   "long": 100,
-//   "address": "address 1",
-//   "duration": "5 min",
-//   "items": [
-//     {
-//       "product_id": 3,
-//       "quantity": 1
-//     },
-//     {
-//       "product_id": 1,
-//       "quantity": 1
-//     }
-//   ]
-// }
-
-// the response success is the total price
-// {
-//   "totalPrice": 83
-// }
+import { useMutation } from "@tanstack/react-query";
 
 const CartScreen = () => {
-  const { cartItems, increaseQuantity, decreaseQuantity, removeItem } = useContext(CartContext);
+  const { cartItems, increaseQuantity, decreaseQuantity, removeItem, clearCart } = useContext(CartContext);
   
   const [address, setAddress] = useState(""); 
   const [location, setLocation] = useState(null);
   const [restaurantLocation, setRestaurantLocation] = useState(null);
   const [duration, setDuration] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -97,17 +70,57 @@ const CartScreen = () => {
     const token = await SecureStore.getItemAsync("userToken");
     if (!token) {
       Alert.alert("Login Required", "Please log in to proceed with checkout.");
-      return;
+      return false;
     }
+    return token;
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!address) {
       Alert.alert("Address Required", "Please enter your address.");
       return;
     }
-    checkLoggedIn();
+
+    const token = await checkLoggedIn();
+    if (!token) return;
+
+    setLoading(true);
+    const items = cartItems.map(item => ({
+      product_id: item.id,
+      quantity: item.quantity,
+    }));
+
+    const payload = {
+      lat: location.coords.latitude,
+      long: location.coords.longitude,
+      address,
+      duration,
+      items,
+    };
+
+    checkoutMutation.mutate({ payload, token });
   };
+
+  const checkoutMutation = useMutation({
+    mutationFn: async ({ payload, token }) => {
+      const response = await axios.post(`${baseUrl}/api/orders/place`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setLoading(false);
+      Alert.alert("Checkout Successful", `Total Price: $${data.totalPrice}`);
+      clearCart();
+    },
+    onError: (error) => {
+      setLoading(false);
+      Alert.alert("Checkout Failed", "There was an error processing your order.");
+      console.error(error);
+    },
+  });
 
   const renderItem = ({ item }) => (
     <View className="flex-row items-center p-4 my-2 bg-white rounded-lg shadow-md">
@@ -137,14 +150,13 @@ const CartScreen = () => {
         </View>
       </View>
       <Text className="text-lg font-bold text-gray-800">
-        ${(item.price * item.quantity)}
+        ${(item.price * item.quantity).toFixed(2)}
       </Text>
     </View>
   );
 
   return (
     <View className="flex-1 bg-gray-100">
-      {/* <Header /> */}
       <FlatList
         data={cartItems}
         renderItem={renderItem}
@@ -153,7 +165,7 @@ const CartScreen = () => {
       />
       <View className="p-1 bg-white border-t border-gray-300">
         <Text className="text-2xl font-bold text-right">
-          Total: ${totalPrice}
+          Total: ${totalPrice.toFixed(2)}
         </Text>
       </View>
 
@@ -171,16 +183,17 @@ const CartScreen = () => {
         />
       </View>
 
-      {/* Display Current Location Duration */}
-      {/* {duration && (
-        <View className="p-1 mx-2 mt-1">
-          <Text className="text-base font-bold">Delivery Duration: {duration}</Text>
+      {/* Loading Indicator */}
+      {loading && (
+        <View className="flex absolute inset-0 justify-center items-center bg-gray-200 bg-opacity-50">
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
-      )} */}
+      )}
 
       <TouchableOpacity
         onPress={handleCheckout}
         className="p-2 mx-2 my-1 bg-blue-500 rounded"
+        disabled={loading}
       >
         <Text className="text-base font-bold text-center text-white">
           Checkout
