@@ -122,7 +122,7 @@ const CartScreen = () => {
       Alert.alert("Checkout Successful", `Total Price: $${data.totalPrice}`);
       clearCart();
       
-      // Invalidate the order history query to refetch it
+      // Invalidate cache
       queryClient.invalidateQueries({ queryKey: ['orderHistory'] })
     },
     onError: (error) => {
