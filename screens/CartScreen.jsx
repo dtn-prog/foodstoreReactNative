@@ -95,6 +95,15 @@ const CartScreen = () => {
   };
 
   const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+      ToastAndroid.showWithGravity(
+        "Your cart is empty. Please add items to proceed.",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
+      return;
+    }
+
     if (!address) {
       ToastAndroid.showWithGravity(
         "Please enter your address.",
