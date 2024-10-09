@@ -7,6 +7,10 @@ import { useQuery } from '@tanstack/react-query';
 import { baseUrl } from '../api'; 
 import Entypo from '@expo/vector-icons/Entypo';
 import { GOMAP_API_KEY } from '../enviroment';
+import {
+  GooglePlaceDetail,
+  GooglePlacesAutocomplete,
+} from "react-native-google-places-autocomplete";
 
 const MapScreen = () => {
   const apiUrl = `${baseUrl}/api/location`;
@@ -154,6 +158,8 @@ const MapScreen = () => {
           {address && <Text>shipping address: {address}</Text>} 
         </View>
       )}
+
+
     </View>
   );
 };
