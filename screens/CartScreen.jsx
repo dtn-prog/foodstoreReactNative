@@ -120,7 +120,7 @@ const CartScreen = () => {
       {/* Display Current Location */}
       {location && (
         <View className="p-4">
-          <Text className="text-lg font-bold">Current Location:</Text>
+          <Text className="text-lg font-bold">shipping Location:</Text>
           <Text>Latitude: {location.coords.latitude}</Text>
           <Text>Longitude: {location.coords.longitude}</Text>
         </View>

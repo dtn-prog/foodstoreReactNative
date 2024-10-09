@@ -34,6 +34,7 @@ const MapScreen = () => {
   });
 
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [address, setAddress] = useState('');
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
@@ -54,6 +55,17 @@ const MapScreen = () => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
+
+      // Get address from coordinates
+      const addressResult = await Location.reverseGeocodeAsync(location.coords);
+      console.log('Address result:', addressResult);
+      if (addressResult.length > 0) {
+        const { formattedAddress } = addressResult[0];
+        setAddress(formattedAddress);
+        // console.log('Fetched address:', formattedAddress);
+      } else {
+        console.log('No address found for the current location.');
+      }
 
       if (restaurantLocation) {
         try {
@@ -108,7 +120,7 @@ const MapScreen = () => {
           <Marker
             coordinate={currentLocation}
             title="Your Location"
-            description="You are here"
+            description={address || "Fetching address..."}
             pinColor="green"
           />
         )}
@@ -139,6 +151,7 @@ const MapScreen = () => {
         <View style={styles.distanceContainer}>
           <Text>Distance to Fastfood365: {distance}</Text>
           {duration && <Text>Estimated Travel Time: {duration}</Text>} 
+          {address && <Text>shipping address: {address}</Text>} 
         </View>
       )}
     </View>
