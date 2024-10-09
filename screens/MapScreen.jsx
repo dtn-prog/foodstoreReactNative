@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Alert, StyleSheet } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
@@ -33,7 +33,10 @@ const MapScreen = () => {
     longitudeDelta: 0.0421,
   });
 
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [distance, setDistance] = useState(null);
+  const [duration, setDuration] = useState(null); // State for duration
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
 
   useEffect(() => {
     const getCurrentLocation = async () => {
@@ -44,6 +47,7 @@ const MapScreen = () => {
       }
 
       let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location.coords);
       setRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -54,15 +58,24 @@ const MapScreen = () => {
       if (restaurantLocation) {
         try {
           const response = await axios.get(
-            `https://maps.gomaps.pro/maps/api/directions/json?origin=${location.coords.latitude},${location.coords.longitude}&destination=${restaurantLocation.lat},${restaurantLocation.long}&key=${GOMAP_API_KEY}`
+            `https://maps.gomaps.pro/maps/api/directions/json?origin=${location.coords.latitude},${location.coords.longitude}&destination=${restaurantLocation.lat},${restaurantLocation.long}&mode=driving&key=${GOMAP_API_KEY}`
           );
-
-          console.log(response.data); 
 
           const route = response.data.routes[0];
           if (route && route.legs.length > 0) {
             const distanceText = route.legs[0].distance.text;
+            const durationText = route.legs[0].duration.text; // Get duration
             setDistance(distanceText);
+            setDuration(durationText); // Set duration
+
+            const points = route.legs[0].steps.map(step => {
+              const { start_location } = step;
+              return {
+                latitude: start_location.lat,
+                longitude: start_location.lng,
+              };
+            });
+            setRouteCoordinates(points);
           } else {
             Alert.alert('No Road Found', 'Could not find a route to the destination. Please check the locations.');
           }
@@ -90,6 +103,16 @@ const MapScreen = () => {
         style={styles.map}
         initialRegion={region}
       >
+        {/* Marker for current location */}
+        {currentLocation && (
+          <Marker
+            coordinate={currentLocation}
+            title="Your Location"
+            description="You are here"
+            pinColor="green" // Customize pin color
+          />
+        )}
+
         {restaurantLocation && (
           <Marker
             coordinate={{
@@ -102,10 +125,20 @@ const MapScreen = () => {
             <Entypo name="home" size={30} color="blue" />
           </Marker>
         )}
+        
+        {/* Render the polyline for the route */}
+        {routeCoordinates.length > 0 && (
+          <Polyline
+            coordinates={routeCoordinates}
+            strokeColor="red" 
+            strokeWidth={1} 
+          />
+        )}
       </MapView>
       {distance && (
         <View style={styles.distanceContainer}>
           <Text>Distance to Fastfood365: {distance}</Text>
+          {duration && <Text>Estimated Travel Time: {duration}</Text>} 
         </View>
       )}
     </View>
@@ -127,8 +160,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
-    elevation: 3, // Adds shadow on Android
-    shadowColor: '#000', // iOS shadow
+    elevation: 3,
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1,
