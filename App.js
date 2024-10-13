@@ -69,7 +69,7 @@ export default function App() {
               }}
             />
             <Tab.Screen
-              name="Account"
+              name="AccountStack"
               component={AccountStack}
               options={{
                 tabBarIcon: () => <Entypo name="user" size={24} color="black" />,
