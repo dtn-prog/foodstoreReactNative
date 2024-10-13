@@ -1,25 +1,58 @@
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native';
 
-const ProductCard = ({id, name, price, image }) => {
+const ProductCard = ({ id, name, price, image }) => {
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity onPress={()=>{navigation.navigate('ProductDetail', {id,name,price,image})}}
-    className="overflow-hidden flex-1 m-2 bg-white rounded-lg shadow-md"> 
+    <TouchableOpacity 
+      onPress={() => navigation.navigate('ProductDetail', { id, name, price, image })} 
+      style={styles.card}
+    >
       <Image
         source={image}
-        className="object-cover w-full h-40" 
-        style={{ height: 150 }}
+        style={styles.image}
       />
-      <View className="p-4">
-        <Text className="text-lg font-semibold">{name} | id: {id}</Text>
-        <Text className="text-base text-gray-600">{price}</Text>
+      <View style={styles.details}>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.price}>{price}</Text>
       </View>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly transparent background
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 5, // Shadow for Android
+    shadowColor: '#000', // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    margin: 8,
+    flex: 1,
+  },
+  image: {
+    width: '100%',
+    height: 150,
+    resizeMode: 'cover',
+  },
+  details: {
+    padding: 16,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  price: {
+    fontSize: 14,
+    color: '#4CAF50', // Green color for price
+    marginTop: 4,
+  },
+});
 
 export default ProductCard;

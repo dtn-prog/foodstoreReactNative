@@ -1,7 +1,6 @@
 import { View, TextInput, FlatList, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Header from '../components/Header';
 import ProductCard from '../components/ProductCard';
 import axios from 'axios';
 import { baseUrl } from '../api';
@@ -34,20 +33,18 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      {/* <Header /> */}
-
       {/* Image Slider */}
       <ImageSlider />
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
-        <AntDesign name="search1" size={24} color="black" />
+        <AntDesign name="search1" size={24} color="#888" style={styles.searchIcon} />
         <TextInput
-          placeholder="Search..."
+          placeholder="Search products..."
           style={styles.searchInput}
           value={searchQuery}
           onChangeText={setSearchQuery}
+          placeholderTextColor="#888"
         />
       </View>
 
@@ -76,8 +73,8 @@ const HomeScreen = () => {
           )}
           keyExtractor={item => item.id.toString()} 
           numColumns={2}
-          contentContainerStyle={{ paddingBottom: 20, justifyContent: 'space-between' }}
-          columnWrapperStyle={{ justifyContent: 'space-between' }}
+          contentContainerStyle={styles.flatListContent}
+          columnWrapperStyle={styles.columnWrapper}
         />
       )}
     </View>
@@ -92,15 +89,25 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    padding: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 25,
+    marginHorizontal: 16,
+    marginBottom: 16,
+    elevation: 2, // Adds shadow effect
   },
   searchInput: {
     flex: 1,
     padding: 10,
-    marginLeft: 8,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 8,
+    paddingLeft: 40, // Space for icon
+    fontSize: 16,
+    color: '#333',
+    borderRadius: 25,
+    backgroundColor: 'transparent', // Transparent background
+  },
+  searchIcon: {
+    position: 'absolute',
+    left: 12, // Position the icon inside the input
   },
   loadingContainer: {
     flex: 1,
@@ -117,6 +124,13 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
+  },
+  flatListContent: {
+    paddingBottom: 20,
+    justifyContent: 'space-between',
+  },
+  columnWrapper: {
+    justifyContent: 'space-between',
   },
 });
 
