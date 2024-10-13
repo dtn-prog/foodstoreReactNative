@@ -4,7 +4,7 @@ import React, { useState, useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 
 const ProductDetailScreen = ({ route }) => {
-  const { id, name, price, image } = route.params;
+  const { id, name, price, image, desc } = route.params;
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useContext(CartContext);
 
@@ -16,7 +16,7 @@ const ProductDetailScreen = ({ route }) => {
   };
 
   const handleAddToCart = () => {
-    const numericPrice = typeof price === 'number' ? price : 0; // Default to 0 if price is not a number
+    const numericPrice = typeof price === 'number' ? price : 0;
     addItem({ id, name, price: numericPrice, quantity, image });
     
     ToastAndroid.showWithGravity(
@@ -37,6 +37,7 @@ const ProductDetailScreen = ({ route }) => {
         <View className="p-4">
           <Text className="text-2xl font-bold">{name} | id:{id}</Text>
           <Text className="text-xl text-gray-600">{price}</Text>
+          <Text>{desc}</Text>
           <View className="flex-row items-center mt-4">
             <TouchableOpacity onPress={decreaseQuantity} className="p-2 bg-gray-200 rounded">
               <Text className="text-lg">-</Text>
