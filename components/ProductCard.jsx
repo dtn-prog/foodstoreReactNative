@@ -1,14 +1,31 @@
-import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useContext } from 'react';
+import { View, Image, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import React, { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CartContext } from '../context/CartContext';
 
 const ProductCard = ({ id, name, price, image, desc }) => {
   const navigation = useNavigation();
   const { addItem } = useContext(CartContext);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [fadeAnim] = useState(new Animated.Value(0));
 
   const handleAddToCart = () => {
     addItem({ id, name, price, image, quantity: 1 });
+    setAddedToCart(true);
+    
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }).start(() => setAddedToCart(false));
+      }, 1000);
+    });
   };
 
   return (
@@ -26,6 +43,11 @@ const ProductCard = ({ id, name, price, image, desc }) => {
         <TouchableOpacity onPress={handleAddToCart} style={styles.addButton}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
+        {addedToCart && (
+          <Animated.View style={[styles.addedIndicator, { opacity: fadeAnim }]}>
+            <Text style={styles.indicatorText}>Added!</Text>
+          </Animated.View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -52,6 +74,7 @@ const styles = StyleSheet.create({
   },
   details: {
     padding: 8,
+    position: 'relative',
   },
   name: {
     fontSize: 16,
@@ -78,6 +101,20 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     lineHeight: 20,
+  },
+  addedIndicator: {
+    position: 'absolute',
+    left: '50%',
+    top: 10,
+    transform: [{ translateX: -50 }],
+    backgroundColor: 'rgba(0, 128, 0, 0.8)',
+    borderRadius: 5,
+    padding: 4,
+  },
+  indicatorText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
 
