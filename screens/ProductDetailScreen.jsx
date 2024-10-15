@@ -36,7 +36,7 @@ const ProductDetailScreen = ({ route }) => {
         />
         <View className="p-4">
           <Text className="text-2xl font-bold">{name} | id:{id}</Text>
-          <Text className="text-xl text-gray-600">{price}</Text>
+          <Text className="text-xl text-gray-600">$ {price}</Text>
           <Text>{desc}</Text>
           <View className="flex-row items-center mt-4">
             <TouchableOpacity onPress={decreaseQuantity} className="p-2 bg-gray-200 rounded">
