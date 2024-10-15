@@ -193,7 +193,7 @@ const CartScreen = () => {
         </View>
       </View>
       <Text className="text-lg font-bold text-gray-800">
-        ${(item.price * item.quantity)}
+        {(item.price * item.quantity)} đ
       </Text>
     </View>
   );
@@ -208,7 +208,7 @@ const CartScreen = () => {
       />
       <View className="p-1 bg-white border-t border-gray-300">
         <Text className="text-2xl font-bold text-right">
-          Total: ${totalPrice}
+          Total: {totalPrice} đ
         </Text>
       </View>
 
