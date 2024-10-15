@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import ImageSlider from '../components/ImageSlider';
 
 const HomeScreen = () => {
-  const apiUrl = `${baseUrl}/api/products`;
+  const apiUrl = `${baseUrl}/api/cats/products`;
 
   const fetchData = async () => {
     try {
@@ -20,16 +20,21 @@ const HomeScreen = () => {
     }
   };
 
-  const { data: products = [], error, isLoading } = useQuery({
+  const { data: categories = [], error, isLoading } = useQuery({
     queryFn: fetchData,
     queryKey: ['products'],
   });
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const groupedProducts = Array.isArray(categories)
+    ? categories.map(category => ({
+        ...category,
+        products: category.products.filter(product =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ),
+      })).filter(category => category.products.length > 0)
+    : [];
 
   return (
     <View style={styles.container}>
@@ -61,22 +66,31 @@ const HomeScreen = () => {
           <Text style={styles.errorText}>Error fetching products: {error.message}</Text>
         </View>
       ) : (
-        // Products Grid
+        // Render Products by Category with Horizontal Scroll
         <FlatList
-          data={filteredProducts} 
-          renderItem={({ item }) => (
-            <ProductCard 
-              id={item.id} 
-              name={item.name} 
-              price={item.price} 
-              desc={item.desc}
-              image={{ uri: `${baseUrl}/storage/${item.image}` }} 
-            />
+          data={groupedProducts}
+          renderItem={({ item: category }) => (
+            <View style={styles.categoryContainer}>
+              <Text style={styles.categoryTitle}>{category.name}</Text>
+              <FlatList
+                data={category.products}
+                renderItem={({ item }) => (
+                  <ProductCard 
+                    id={item.id} 
+                    name={item.name} 
+                    price={item.price} 
+                    desc={item.desc}
+                    image={{ uri: `${baseUrl}/storage/${item.image}` }} 
+                  />
+                )}
+                keyExtractor={item => item.id.toString()} 
+                horizontal
+                showsHorizontalScrollIndicator={false} 
+                contentContainerStyle={styles.horizontalFlatListContent}
+              />
+            </View>
           )}
           keyExtractor={item => item.id.toString()} 
-          numColumns={2}
-          contentContainerStyle={styles.flatListContent}
-          columnWrapperStyle={styles.columnWrapper}
         />
       )}
     </View>
@@ -89,9 +103,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   sliderContainer: {
-    height: 220, // Increased height for better visibility
-    marginBottom: 16, // Add margin below the slider for spacing
-    overflow: 'hidden', // Prevent overflow
+    height: 220,
+    marginBottom: 16,
+    overflow: 'hidden',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -101,20 +115,20 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginHorizontal: 16,
     marginBottom: 16,
-    elevation: 2, // Adds shadow effect
+    elevation: 2,
   },
   searchInput: {
     flex: 1,
     padding: 10,
-    paddingLeft: 40, // Space for icon
+    paddingLeft: 40,
     fontSize: 16,
     color: '#333',
     borderRadius: 25,
-    backgroundColor: 'transparent', // Transparent background
+    backgroundColor: 'transparent',
   },
   searchIcon: {
     position: 'absolute',
-    left: 12, // Position the icon inside the input
+    left: 12,
   },
   loadingContainer: {
     flex: 1,
@@ -132,12 +146,17 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
   },
-  flatListContent: {
-    paddingBottom: 20,
-    justifyContent: 'space-between',
+  categoryContainer: {
+    marginBottom: 16,
   },
-  columnWrapper: {
-    justifyContent: 'space-between',
+  categoryTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 16,
+    marginBottom: 8,
+  },
+  horizontalFlatListContent: {
+    paddingHorizontal: 16,
   },
 });
 

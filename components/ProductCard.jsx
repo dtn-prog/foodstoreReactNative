@@ -17,7 +17,6 @@ const ProductCard = ({ id, name, price, image, desc }) => {
       <View style={styles.details}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.price}>{price} đ</Text>
-        {/* <Text style={styles.price}>{desc}</Text> */}
       </View>
     </TouchableOpacity>
   );
@@ -25,16 +24,17 @@ const ProductCard = ({ id, name, price, image, desc }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly transparent background
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 12,
     overflow: 'hidden',
-    elevation: 5, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
+    elevation: 5,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     margin: 8,
-    flex: 1,
+    width: 220,
+    aspectRatio: 1,
   },
   image: {
     width: '100%',
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   details: {
-    padding: 16,
+    padding: 8,
   },
   name: {
     fontSize: 16,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 14,
-    color: '#4CAF50', // Green color for price
+    color: '#4CAF50',
     marginTop: 4,
   },
 });
