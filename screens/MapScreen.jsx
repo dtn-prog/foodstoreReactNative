@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert,Image } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { baseUrl } from '../api'; 
-import Entypo from '@expo/vector-icons/Entypo';
 import { GOMAP_API_KEY } from '../enviroment';
+import { Entypo } from '@expo/vector-icons'; // Importing Entypo for the person icon
 
 const MapScreen = () => {
   const apiUrl = `${baseUrl}/api/location`;
@@ -120,16 +120,18 @@ const MapScreen = () => {
         style={{ flex: 1, marginBottom: 60 }}
         initialRegion={region}
       >
-        {/* Marker for current location */}
+        {/* Marker for current user location using Entypo icon */}
         {currentLocation && (
           <Marker
             coordinate={currentLocation}
             title="Your Location"
             description={address || "Fetching address..."}
-            pinColor="green"
-          />
+          >
+            <Entypo name="user" size={24} color="blue" />
+          </Marker>
         )}
 
+        {/* Marker for restaurant location */}
         {restaurantLocation && (
           <Marker
             coordinate={{
@@ -139,7 +141,10 @@ const MapScreen = () => {
             title="Fastfood365"
             description={restaurantAddress || "Fetching restaurant address..."}
           >
-            <Entypo name="home" size={30} color="blue" />
+            <Image 
+              source={require('../assets/icons/icon.png')}
+              style={{ width: 40, height: 40 }} 
+            />
           </Marker>
         )}
         
@@ -157,8 +162,6 @@ const MapScreen = () => {
         <View className="absolute right-2 bottom-2 left-2 p-3 bg-white rounded-lg shadow">
           <Text className="text-lg">Distance to Fastfood365: {distance}</Text>
           {duration && <Text className="text-lg">Estimated Travel Time: {duration}</Text>} 
-          {/* {address && <Text className="text-lg">Your Address: {address}</Text>} 
-          {restaurantAddress && <Text className="text-lg">Restaurant Address: {restaurantAddress}</Text>}  */}
         </View>
       )}
     </View>
