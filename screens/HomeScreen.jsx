@@ -34,7 +34,9 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       {/* Image Slider */}
-      <ImageSlider />
+      <View style={styles.sliderContainer}>
+        <ImageSlider />
+      </View>
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
@@ -85,6 +87,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  sliderContainer: {
+    height: 220, // Increased height for better visibility
+    marginBottom: 16, // Add margin below the slider for spacing
+    overflow: 'hidden', // Prevent overflow
   },
   searchContainer: {
     flexDirection: 'row',
