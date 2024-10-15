@@ -1,9 +1,15 @@
 import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { CartContext } from '../context/CartContext';
 
 const ProductCard = ({ id, name, price, image, desc }) => {
   const navigation = useNavigation();
+  const { addItem } = useContext(CartContext);
+
+  const handleAddToCart = () => {
+    addItem({ id, name, price, image, quantity: 1 });
+  };
 
   return (
     <TouchableOpacity 
@@ -17,6 +23,9 @@ const ProductCard = ({ id, name, price, image, desc }) => {
       <View style={styles.details}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.price}>{price} đ</Text>
+        <TouchableOpacity onPress={handleAddToCart} style={styles.addButton}>
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
@@ -53,6 +62,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#4CAF50',
     marginTop: 4,
+  },
+  addButton: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 20,
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 8,
+    bottom: 8,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontSize: 20,
+    lineHeight: 20,
   },
 });
 
