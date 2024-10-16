@@ -58,7 +58,7 @@ const HomeScreen = () => {
       {/* Loading and Error Handling */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#FF3366" />
           <Text style={styles.loadingText}>Loading products...</Text>
         </View>
       ) : error ? (

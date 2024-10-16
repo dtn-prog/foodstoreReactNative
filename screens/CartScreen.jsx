@@ -189,7 +189,7 @@ const CartScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => removeItem(item.id)}
-            className="p-2 bg-red-500 rounded"
+            className="p-2 bg-[#FF3366] rounded" // Changed color to #FF3366
           >
             <Text className="font-bold text-white">Remove</Text>
           </TouchableOpacity>
@@ -245,13 +245,13 @@ const CartScreen = () => {
       {/* Loading Indicator */}
       {loading && (
         <View className="flex absolute inset-0 justify-center items-center bg-gray-200 bg-opacity-50">
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#FF3366" />
         </View>
       )}
 
       <TouchableOpacity
         onPress={handleCheckout}
-        className="p-2 mx-2 my-1 bg-blue-500 rounded"
+        className="p-2 mx-2 my-1 bg-[#FF3366] rounded"
         disabled={loading}
       >
         <Text className="text-base font-bold text-center text-white">

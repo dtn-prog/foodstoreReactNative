@@ -34,7 +34,7 @@ const ProductDetailScreen = ({ route }) => {
         />
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{name}</Text>
-          <Text style={styles.id}>ID: {id}</Text>
+          {/* <Text style={styles.id}>ID: {id}</Text> */}
           <Text style={styles.price}>{price} đ</Text>
           <Text style={styles.description}>{desc}</Text>
         </View>

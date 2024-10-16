@@ -105,7 +105,7 @@ const RegisterScreen = ({ navigation }) => {
         placeholderTextColor="#aaa"
       />
       
-      <Button title="Register" onPress={handleRegister} disabled={mutation.isLoading} color="#007BFF" />
+      <Button title="Register" onPress={handleRegister} disabled={mutation.isLoading} color="#FF3366" />
       
       <Text style={styles.loginText} onPress={() => navigation.navigate('Login')}>
         Already have an account? <Text style={styles.loginLink}>Login</Text>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   loginText: {
     marginTop: 20,
     textAlign: 'center',
-    color: '#007BFF',
+    color: '#FF3366',
     fontSize: 16,
   },
   loginLink: {
