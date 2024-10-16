@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Alert, Image } from 'react-native';
+import { View, Text, Alert, Image, StyleSheet } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
@@ -107,17 +107,17 @@ const MapScreen = () => {
   }, [restaurantLocation]);
 
   if (isLoading) {
-    return <Text style={{ marginTop: 20, textAlign: 'center' }}>Đang tải...</Text>;
+    return <Text style={styles.loadingText}>Đang tải...</Text>;
   }
 
   if (error) {
-    return <Text style={{ marginTop: 20, textAlign: 'center', color: 'red' }}>Lỗi tải vị trí cửa hàng</Text>;
+    return <Text style={styles.errorText}>Lỗi tải vị trí cửa hàng</Text>;
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <MapView
-        style={{ flex: 1, marginBottom: 60 }}
+        style={styles.map}
         initialRegion={region}
       >
         {/* Marker for current user location using Entypo icon */}
@@ -143,7 +143,7 @@ const MapScreen = () => {
           >
             <Image 
               source={require('../assets/icons/icon.png')}
-              style={{ width: 40, height: 40 }} 
+              style={styles.restaurantImage} 
             />
           </Marker>
         )}
@@ -159,13 +159,52 @@ const MapScreen = () => {
       </MapView>
 
       {distance && (
-        <View style={{ position: 'absolute', right: 10, bottom: 10, left: 10, padding: 10, backgroundColor: 'white', borderRadius: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 4 }}>
-          <Text style={{ fontSize: 18 }}>Quãng đường: {distance}</Text>
-          {duration && <Text style={{ fontSize: 18 }}>Thời gian: {duration}</Text>} 
+        <View style={styles.infoBox}>
+          <Text style={styles.infoText}>Quãng đường: {distance}</Text>
+          {duration && <Text style={styles.infoText}>Thời gian: {duration}</Text>} 
         </View>
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+    marginBottom: 60,
+  },
+  loadingText: {
+    marginTop: 20,
+    textAlign: 'center',
+  },
+  errorText: {
+    marginTop: 20,
+    textAlign: 'center',
+    color: 'red',
+  },
+  restaurantImage: {
+    width: 40,
+    height: 40,
+  },
+  infoBox: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    left: 10,
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  infoText: {
+    fontSize: 18,
+  },
+});
 
 export default MapScreen;
