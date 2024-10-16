@@ -17,6 +17,7 @@ import axios from "axios";
 import { GOMAP_API_KEY } from "../enviroment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Picker } from "@react-native-picker/picker";
+import { MaterialIcons } from '@expo/vector-icons';
 
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem, clearCart } = useContext(CartContext);
@@ -148,7 +149,7 @@ const CartScreen = () => {
     onSuccess: (data) => {
       setLoading(false);
       ToastAndroid.showWithGravity(
-        `Đặt hàng thành cộng, tổng giá tiền: $${data.totalPrice}`,
+        `Đặt hàng thành công, tổng giá tiền: $${data.totalPrice}`,
         ToastAndroid.SHORT,
         ToastAndroid.TOP
       );
@@ -169,11 +170,10 @@ const CartScreen = () => {
   });
 
   const renderItem = ({ item }) => (
-    <View className="flex-row items-center p-4 my-2 bg-white rounded-lg shadow-md">
+    <View className="flex-row items-center p-4 my-2 bg-white rounded-lg border border-gray-200 shadow-md">
       <Image source={item.image} className="w-16 h-16 rounded-lg" />
       <View className="flex-1 ml-4">
         <Text className="text-lg font-bold">{item.name}</Text>
-        {/* <Text className="my-1 text-gray-600">Quantity: {item.quantity}</Text> */}
         <View className="flex-row items-center mt-2">
           <TouchableOpacity
             onPress={() => decreaseQuantity(item.id)}
@@ -184,15 +184,15 @@ const CartScreen = () => {
           <Text className="my-1 text-gray-600">{item.quantity}</Text>
           <TouchableOpacity
             onPress={() => increaseQuantity(item.id)}
-            className="p-2 mr-2 bg-gray-300 rounded"
+            className="p-2 ml-2 bg-gray-300 rounded"
           >
             <Text className="font-bold">+</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => removeItem(item.id)}
-            className="p-2 bg-[#FF3366] rounded"
+            className="p-2 ml-2 bg-red-500 rounded-full"
           >
-            <Text className="font-bold text-white">Bỏ</Text>
+            <MaterialIcons name="delete" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </View>
@@ -210,15 +210,13 @@ const CartScreen = () => {
         keyExtractor={(item) => item.id.toString()} 
         contentContainerStyle={{ paddingBottom: 100 }} 
       />
-      {/* <View className="p-1 bg-white border-t border-gray-300">
-        <Text className="text-2xl font-bold text-right">
-          {totalPrice} đ
-        </Text>
-      </View> */}
 
       {/* Address Input Field */}
       <View className="p-1 mx-2">
-        <Text className="mb-1 text-base font-bold">Địa chỉ giao hàng</Text>
+        <View className="flex-row items-center mb-1">
+          <MaterialIcons name="location-on" size={24} color="#FF3366" />
+          <Text className="ml-2 text-base font-bold">Địa chỉ giao hàng</Text>
+        </View>
         <TextInput
           value={address}
           onChangeText={setAddress}
@@ -232,11 +230,21 @@ const CartScreen = () => {
 
       {/* Payment Method Picker */}
       <View className="p-1 mx-2">
-        <Text className="mb-1 text-base font-bold">Phương thức trả tiền</Text>
+        <View className="flex-row items-center mb-1">
+          <MaterialIcons name="payment" size={24} color="#FF3366" />
+          <Text className="ml-2 text-base font-bold">Phương thức trả tiền</Text>
+        </View>
         <Picker
           selectedValue={paymentMethod}
           onValueChange={(itemValue) => setPaymentMethod(itemValue)}
-          style={{ height: 50, width: '100%' }}
+          style={{
+            height: 50,
+            width: '100%',
+            backgroundColor: 'white',
+            borderRadius: 5,
+            borderColor: 'gray',
+            borderWidth: 1,
+          }}
         >
           <Picker.Item label="Tiền mặt" value="cod" />
           <Picker.Item label="Thẻ" value="cc" />
