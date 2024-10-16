@@ -57,11 +57,11 @@ const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={require('../assets/icons/icon_with_name.png')} style={styles.logo} />
-      <Text style={styles.title}>Login to Your Account</Text>
+      <Text style={styles.title}>Đăng nhập</Text>
       
       <TextInput
         style={styles.input}
-        placeholder="Phone"
+        placeholder="Số điện thoại"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
@@ -69,17 +69,18 @@ const LoginScreen = ({ navigation }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Mật khẩu"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
         placeholderTextColor="#aaa"
       />
       
-      <Button title="Login" onPress={handleLogin} disabled={mutation.isLoading} color="#FF3366" />
+      <Button title="Đăng nhập" onPress={handleLogin} disabled={mutation.isLoading} color="#FF3366" />
       
       <Text style={styles.registerText} onPress={() => navigation.navigate('Register')}>
-        Don't have an account? <Text style={styles.registerLink}>Register</Text>
+        Không có tài khoản? Đăng ký  
+        <Text style={styles.registerLink}> Tại đây</Text>
       </Text>
     </View>
   );
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#fff',
-    elevation: 2, // For slight shadow effect on Android
+    elevation: 2,
   },
   registerText: {
     marginTop: 20,

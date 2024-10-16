@@ -71,18 +71,18 @@ const RegisterScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Image source={require('../assets/icons/icon_with_name.png')} style={styles.logo} />
       
-      <Text style={styles.title}>Register</Text>
+      <Text style={styles.title}>Đăng ký</Text>
       
       <TextInput
         style={styles.input}
-        placeholder="Name"
+        placeholder="Tên"
         value={name}
         onChangeText={setName}
         placeholderTextColor="#aaa"
       />
       <TextInput
         style={styles.input}
-        placeholder="Phone"
+        placeholder="Số điện thoại"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
@@ -90,7 +90,7 @@ const RegisterScreen = ({ navigation }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Mật khẩu"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
@@ -98,17 +98,18 @@ const RegisterScreen = ({ navigation }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Confirm Password"
+        placeholder="Nhập lại mật khẩu"
         secureTextEntry
         value={passwordConfirm}
         onChangeText={setPasswordConfirm}
         placeholderTextColor="#aaa"
       />
       
-      <Button title="Register" onPress={handleRegister} disabled={mutation.isLoading} color="#FF3366" />
+      <Button title="Đăng ký" onPress={handleRegister} disabled={mutation.isLoading} color="#FF3366" />
       
       <Text style={styles.loginText} onPress={() => navigation.navigate('Login')}>
-        Already have an account? <Text style={styles.loginLink}>Login</Text>
+        Đã có tài khoản? Đăng nhập 
+        <Text style={styles.loginLink}> Tại đây</Text>
       </Text>
     </View>
   );

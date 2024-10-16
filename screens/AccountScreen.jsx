@@ -62,14 +62,14 @@ const AccountScreen = ({ navigation }) => {
 
   const renderOrderItem = ({ item }) => (
     <View className="p-4 mb-4 bg-white rounded-lg shadow-md">
-      <Text className="text-lg font-bold">Order Status: {item.status}</Text>
-      <Text className="mb-1 text-gray-700">Address: {item.address}</Text>
-      <Text className="mb-1 text-gray-700">Payment Method: {item.payment_method}</Text>
-      <Text className="text-gray-700">Duration: {item.duration}</Text>
+      <Text className="text-lg font-bold">Trạng thái: {item.status}</Text>
+      <Text className="mb-1 text-gray-700">Địa chỉ: {item.address}</Text>
+      <Text className="mb-1 text-gray-700">Phương thức thanh toán: {item.payment_method}</Text>
+      <Text className="text-gray-700">Thời gian: {item.duration}</Text>
       <Text className="my-2 text-gray-700">
-        Order Date: {new Date(item.created_at).toLocaleString()}
+        Thời gian đặt: {new Date(item.created_at).toLocaleString()}
       </Text>
-      <Text className="font-bold">Items:</Text>
+      {/* <Text className="font-bold">Items:</Text> */}
       {item.items.map((product, index) => (
         <View key={index} className="flex-row items-center my-2">
           <Image
@@ -85,21 +85,21 @@ const AccountScreen = ({ navigation }) => {
   );
 
   if (isLoading) {
-    return <Text className="text-lg text-center">Loading...</Text>;
+    return <Text className="text-lg text-center">Đang tải...</Text>;
   }
 
   if (error) {
     return (
       <Text className="text-lg text-center text-red-500">
-        Error fetching order history: {error.message}
+        Có lỗi lấy lịch sử: {error.message}
       </Text>
     );
   }
 
   return (
     <View className="flex-1 p-4 bg-gray-100">
-      <Button title="Logout" color={"#FF3366"} onPress={handleLogout} />
-      <Text className="mt-6 mb-2 text-lg text-center">Order History:</Text>
+      <Button title="Đăng xuất" color={"#FF3366"} onPress={handleLogout} />
+      <Text className="mt-6 mb-2 text-lg text-center">Lịch sử:</Text>
       <FlatList
         data={orderHistory}
         renderItem={renderOrderItem}

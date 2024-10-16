@@ -47,7 +47,7 @@ const HomeScreen = () => {
       <View style={styles.searchContainer}>
         <AntDesign name="search1" size={24} color="#888" style={styles.searchIcon} />
         <TextInput
-          placeholder="Search products..."
+          placeholder="Tìm kiếm"
           style={styles.searchInput}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -59,11 +59,11 @@ const HomeScreen = () => {
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#FF3366" />
-          <Text style={styles.loadingText}>Loading products...</Text>
+          <Text style={styles.loadingText}>Đang tải...</Text>
         </View>
       ) : error ? (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Error fetching products: {error.message}</Text>
+          <Text style={styles.errorText}>Lỗi tải: {error.message}</Text>
         </View>
       ) : (
         // Render Products by Category with Horizontal Scroll

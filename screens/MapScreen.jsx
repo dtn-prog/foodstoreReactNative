@@ -107,11 +107,11 @@ const MapScreen = () => {
   }, [restaurantLocation]);
 
   if (isLoading) {
-    return <Text className="mt-5 text-center">Loading...</Text>;
+    return <Text className="mt-5 text-center">Đang tải...</Text>;
   }
 
   if (error) {
-    return <Text className="mt-5 text-center text-red-500">Error loading location data</Text>;
+    return <Text className="mt-5 text-center text-red-500">Lỗi tải vị trí cửa hàng</Text>;
   }
 
   return (
@@ -160,8 +160,8 @@ const MapScreen = () => {
 
       {distance && (
         <View className="absolute right-2 bottom-2 left-2 p-3 bg-white rounded-lg shadow">
-          <Text className="text-lg">Distance to Fastfood365: {distance}</Text>
-          {duration && <Text className="text-lg">Estimated Travel Time: {duration}</Text>} 
+          <Text className="text-lg">Quãng đường: {distance}</Text>
+          {duration && <Text className="text-lg">Thời gian: {duration}</Text>} 
         </View>
       )}
     </View>
