@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, Button, Text, ToastAndroid, Image, StyleSheet } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { baseUrl } from '../api';
+import { useFocusEffect } from '@react-navigation/native';
 
 const LoginScreen = ({ navigation }) => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      const token = await SecureStore.getItemAsync('userToken');
-      if (token) {
-        navigation.navigate('Account'); 
-      }
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkLoggedIn = async () => {
+        const token = await SecureStore.getItemAsync('userToken');
+        if (token) {
+          navigation.navigate('Account'); 
+        }
+      };
 
-    checkLoggedIn();
-  }, []);
+      checkLoggedIn();
+    }, [navigation])
+  );
 
   const mutation = useMutation({
     mutationFn: async (loginData) => {
@@ -34,7 +37,7 @@ const LoginScreen = ({ navigation }) => {
       );
 
       await SecureStore.setItemAsync('userToken', token);
-      navigation.navigate('Account', { user });
+      navigation.navigate('Account');
     },
     onError: (error) => {
       ToastAndroid.showWithGravity(

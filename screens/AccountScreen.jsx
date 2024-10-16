@@ -1,21 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ToastAndroid, FlatList, Image, StyleSheet } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { baseUrl } from '../api';
 import axios from 'axios';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
-const AccountScreen = ({ route, navigation }) => {
-  const { user } = route.params || {};
+const AccountScreen = ({ navigation }) => {
+  const [isLoadingToken, setIsLoadingToken] = useState(true);
 
-  useEffect(() => {
-    if (!user) {
-      navigation.navigate('Login');
-    }
-  }, [user, navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkUserLogin = async () => {
+        const token = await SecureStore.getItemAsync('userToken');
+        if (!token) {
+          navigation.navigate('Login');
+        } else {
+          setIsLoadingToken(false);
+        }
+      };
 
-  const queryClient = useQueryClient();
+      checkUserLogin();
+    }, [navigation])
+  );
+
   const apiUrl = `${baseUrl}/api/orders/history`;
 
   const fetchOrderHistory = async () => {
@@ -31,8 +40,10 @@ const AccountScreen = ({ route, navigation }) => {
   const { data: orderHistory, isLoading, error } = useQuery({
     queryKey: ['orderHistory'],
     queryFn: fetchOrderHistory,
-    enabled: true,
+    enabled: !isLoadingToken,
     refetchOnWindowFocus: false,
+    cacheTime: 0,
+    staleTime: 0,
   });
 
   const handleLogout = async () => {
@@ -45,31 +56,12 @@ const AccountScreen = ({ route, navigation }) => {
     navigation.navigate('Login');
   };
 
-  const renderOrderItem = ({ item }) => (
-    <View style={styles.orderItem}>
-      <Text style={styles.orderStatus}>Trạng thái: {item.status}</Text>
-      <Text style={styles.orderDetail}>Địa chỉ: {item.address}</Text>
-      <Text style={styles.orderDetail}>Phương thức thanh toán: {item.payment_method}</Text>
-      <Text style={styles.orderDetail}>Thời gian: {item.duration}</Text>
-      <Text style={styles.orderDetail}>
-        Thời gian đặt: {new Date(item.created_at).toLocaleString()}
-      </Text>
-      {item.items.map((product, index) => (
-        <View key={index} style={styles.productItem}>
-          <Image
-            source={{ uri: `${baseUrl}/storage/${product.product_image}` }}
-            style={styles.productImage}
-          />
-          <Text style={styles.productName}>
-            {product.product_name} (x{product.quantity})
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
+  if (isLoadingToken) {
+    return <Text style={styles.loadingText}>Đang tải...</Text>;
+  }
 
   if (isLoading) {
-    return <Text style={styles.loadingText}>Đang tải...</Text>;
+    return <Text style={styles.loadingText}>Đang tải lịch sử...</Text>;
   }
 
   if (error) {
@@ -85,8 +77,8 @@ const AccountScreen = ({ route, navigation }) => {
       <View style={styles.userInfoContainer}>
         <MaterialCommunityIcons name="account-circle" size={60} color="#FF3366" />
         <View style={styles.userInfoText}>
-          <Text style={styles.userName}>{user?.name || 'N/A'}</Text>
-          <Text style={styles.userPhone}>{user?.phone || 'N/A'}</Text>
+          <Text style={styles.userName}>User</Text>
+          <Text style={styles.userPhone}>Phone</Text>
         </View>
       </View>
       
@@ -101,6 +93,29 @@ const AccountScreen = ({ route, navigation }) => {
     </View>
   );
 };
+
+const renderOrderItem = ({ item }) => (
+  <View style={styles.orderItem}>
+    <Text style={styles.orderStatus}>Trạng thái: {item.status}</Text>
+    <Text style={styles.orderDetail}>Địa chỉ: {item.address}</Text>
+    <Text style={styles.orderDetail}>Phương thức thanh toán: {item.payment_method}</Text>
+    <Text style={styles.orderDetail}>Thời gian: {item.duration}</Text>
+    <Text style={styles.orderDetail}>
+      Thời gian đặt: {new Date(item.created_at).toLocaleString()}
+    </Text>
+    {item.items.map((product, index) => (
+      <View key={index} style={styles.productItem}>
+        <Image
+          source={{ uri: `${baseUrl}/storage/${product.product_image}` }}
+          style={styles.productImage}
+        />
+        <Text style={styles.productName}>
+          {product.product_name} (x{product.quantity})
+        </Text>
+      </View>
+    ))}
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
