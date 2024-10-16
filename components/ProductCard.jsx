@@ -45,7 +45,7 @@ const ProductCard = ({ id, name, price, image, desc }) => {
         </TouchableOpacity>
         {addedToCart && (
           <Animated.View style={[styles.addedIndicator, { opacity: fadeAnim }]}>
-            <Text style={styles.indicatorText}>Added!</Text>
+            <Text style={styles.indicatorText}>Đã thêm!</Text>
           </Animated.View>
         )}
       </View>

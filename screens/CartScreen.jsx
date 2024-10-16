@@ -18,6 +18,7 @@ import { GOMAP_API_KEY } from "../enviroment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Picker } from "@react-native-picker/picker";
 import { MaterialIcons } from '@expo/vector-icons';
+import Header from '../components/Header'
 
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem, clearCart } = useContext(CartContext);
@@ -100,7 +101,7 @@ const CartScreen = () => {
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
       ToastAndroid.showWithGravity(
-        "Your cart is empty. Please add items to proceed.",
+        "Giỏ hàng của bạn trống.",
         ToastAndroid.SHORT,
         ToastAndroid.TOP
       );
@@ -109,7 +110,7 @@ const CartScreen = () => {
 
     if (!address) {
       ToastAndroid.showWithGravity(
-        "Please enter your address.",
+        "Nhập địa chỉ.",
         ToastAndroid.SHORT,
         ToastAndroid.TOP
       );
@@ -204,6 +205,7 @@ const CartScreen = () => {
 
   return (
     <View className="flex-1 bg-gray-100">
+      <Header></Header>
       <FlatList
         data={cartItems}
         renderItem={renderItem}

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { baseUrl } from '../api';
 import { useQuery } from '@tanstack/react-query';
 import ImageSlider from '../components/ImageSlider';
+import Header from '../components/Header'
 
 const HomeScreen = () => {
   const apiUrl = `${baseUrl}/api/cats/products`;
@@ -38,6 +39,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Header></Header>
       {/* Image Slider */}
       <View style={styles.sliderContainer}>
         <ImageSlider />
@@ -66,7 +68,6 @@ const HomeScreen = () => {
           <Text style={styles.errorText}>Lỗi tải: {error.message}</Text>
         </View>
       ) : (
-        // Render Products by Category with Horizontal Scroll
         <FlatList
           data={groupedProducts}
           renderItem={({ item: category }) => (
