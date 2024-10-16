@@ -7,6 +7,7 @@ import {
   ToastAndroid,
   TextInput,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
@@ -171,50 +172,50 @@ const CartScreen = () => {
   });
 
   const renderItem = ({ item }) => (
-    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 16, marginVertical: 8, backgroundColor: 'white', borderRadius: 8, borderWidth: 1, borderColor: 'gray', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 4 }}>
-      <Image source={item.image} style={{ width: 64, height: 64, borderRadius: 8 }} />
-      <View style={{ flex: 1, marginLeft: 16 }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-          <TouchableOpacity onPress={() => decreaseQuantity(item.id)} style={{ padding: 8, backgroundColor: '#e0e0e0', borderRadius: 4 }}>
-            <Text style={{ fontWeight: 'bold' }}>-</Text>
+    <View style={styles.itemContainer}>
+      <Image source={item.image} style={styles.itemImage} />
+      <View style={styles.itemDetails}>
+        <Text style={styles.itemName}>{item.name}</Text>
+        <View style={styles.quantityContainer}>
+          <TouchableOpacity onPress={() => decreaseQuantity(item.id)} style={styles.quantityButton}>
+            <Text style={styles.buttonText}>-</Text>
           </TouchableOpacity>
-          <Text style={{ marginHorizontal: 8 }}>{item.quantity}</Text>
-          <TouchableOpacity onPress={() => increaseQuantity(item.id)} style={{ padding: 8, backgroundColor: '#e0e0e0', borderRadius: 4 }}>
-            <Text style={{ fontWeight: 'bold' }}>+</Text>
+          <Text style={styles.quantityText}>{item.quantity}</Text>
+          <TouchableOpacity onPress={() => increaseQuantity(item.id)} style={styles.quantityButton}>
+            <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => removeItem(item.id)} style={{ padding: 8, marginLeft: 8, backgroundColor: 'red', borderRadius: 50 }}>
+          <TouchableOpacity onPress={() => removeItem(item.id)} style={styles.deleteButton}>
             <MaterialIcons name="delete" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#4A4A4A' }}>
+      <Text style={styles.itemPrice}>
         {(item.price * item.quantity)} đ
       </Text>
     </View>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+    <View style={styles.container}>
       <Header />
       <FlatList
         data={cartItems}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()} 
-        contentContainerStyle={{ paddingBottom: 100 }} 
+        contentContainerStyle={styles.flatListContent} 
       />
 
       {/* Address Input Field */}
-      <View style={{ padding: 8, marginHorizontal: 8 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+      <View style={styles.inputContainer}>
+        <View style={styles.inputLabelContainer}>
           <MaterialIcons name="location-on" size={24} color="#FF3366" />
-          <Text style={{ marginLeft: 8, fontSize: 16, fontWeight: 'bold' }}>Địa chỉ giao hàng</Text>
+          <Text style={styles.inputLabel}>Địa chỉ giao hàng</Text>
         </View>
         <TextInput
           value={address}
           onChangeText={setAddress}
           placeholder="Nhập địa chỉ của bạn"
-          style={{ padding: 8, backgroundColor: 'white', borderRadius: 5, borderWidth: 1, borderColor: 'gray' }}
+          style={styles.textInput}
           multiline
           numberOfLines={1} 
           maxLength={100}
@@ -222,22 +223,15 @@ const CartScreen = () => {
       </View>
 
       {/* Payment Method Picker */}
-      <View style={{ padding: 8, marginHorizontal: 8 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+      <View style={styles.inputContainer}>
+        <View style={styles.inputLabelContainer}>
           <MaterialIcons name="payment" size={24} color="#FF3366" />
-          <Text style={{ marginLeft: 8, fontSize: 16, fontWeight: 'bold' }}>Phương thức thanh toán</Text>
+          <Text style={styles.inputLabel}>Phương thức thanh toán</Text>
         </View>
         <Picker
           selectedValue={paymentMethod}
           onValueChange={(itemValue) => setPaymentMethod(itemValue)}
-          style={{
-            height: 50,
-            width: '100%',
-            backgroundColor: 'white',
-            borderRadius: 5,
-            borderColor: 'gray',
-            borderWidth: 1,
-          }}
+          style={styles.picker}
         >
           <Picker.Item label="Tiền mặt" value="cod" />
           <Picker.Item label="Thẻ" value="cc" />
@@ -246,22 +240,134 @@ const CartScreen = () => {
 
       {/* Loading Indicator */}
       {loading && (
-        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(200, 200, 200, 0.5)' }}>
+        <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#FF3366" />
         </View>
       )}
 
       <TouchableOpacity
         onPress={handleCheckout}
-        style={{ padding: 16, margin: 8, backgroundColor: '#FF3366', borderRadius: 5 }}
+        style={styles.checkoutButton}
         disabled={loading}
       >
-        <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', color: 'white' }}>
+        <Text style={styles.checkoutButtonText}>
           Đặt Hàng: {totalPrice} đ
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f7f7f7',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginVertical: 8,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'gray',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  itemImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 8,
+  },
+  itemDetails: {
+    flex: 1,
+    marginLeft: 16,
+  },
+  itemName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  quantityButton: {
+    padding: 8,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 4,
+  },
+  quantityText: {
+    marginHorizontal: 8,
+  },
+  deleteButton: {
+    padding: 8,
+    marginLeft: 8,
+    backgroundColor: 'red',
+    borderRadius: 50,
+  },
+  itemPrice: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#4A4A4A',
+  },
+  flatListContent: {
+    paddingBottom: 100,
+  },
+  inputContainer: {
+    padding: 8,
+    marginHorizontal: 8,
+  },
+  inputLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  inputLabel: {
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textInput: {
+    padding: 8,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'gray',
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderColor: 'gray',
+    borderWidth: 1,
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(200, 200, 200, 0.5)',
+  },
+  checkoutButton: {
+    padding: 16,
+    margin: 8,
+    backgroundColor: '#FF3366',
+    borderRadius: 5,
+  },
+  checkoutButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
+  },
+});
 
 export default CartScreen;
