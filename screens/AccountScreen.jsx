@@ -100,14 +100,16 @@ const AccountScreen = ({ navigation }) => {
           {userData ? (
             <>
               <Text style={styles.userName}>{userData.name}</Text>
-              <Text style={styles.userPhone}>{userData.phone}</Text>
+              <View style={styles.phoneContainer}>
+                <MaterialCommunityIcons name="phone" size={20} color="#FF3366" />
+                <Text style={styles.userPhone}>{userData.phone}</Text>
+              </View>
             </>
           ) : (
             <Text style={styles.loadingText}>Đang tải thông tin người dùng...</Text>
           )}
         </View>
       </View>
-      
       <Button title="Đăng xuất" color={"#FF3366"} onPress={handleLogout} />
       <Text style={styles.historyTitle}>Lịch sử:</Text>
       <FlatList
@@ -215,6 +217,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  phoneContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  userPhone: {
+    fontSize: 16,
+    color: '#666',
+    marginLeft: 5, // Add some space between icon and text
   },
 });
 
