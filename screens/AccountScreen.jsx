@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Button, ToastAndroid, FlatList, Image, StyleSheet } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { baseUrl } from '../api';
@@ -9,6 +9,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const AccountScreen = ({ navigation }) => {
   const [isLoadingToken, setIsLoadingToken] = useState(true);
+  const [userData, setUserData] = useState(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -18,12 +19,31 @@ const AccountScreen = ({ navigation }) => {
           navigation.navigate('Login');
         } else {
           setIsLoadingToken(false);
+          fetchUserData(token);
         }
       };
 
       checkUserLogin();
     }, [navigation])
   );
+
+  const fetchUserData = async (token) => {
+    try {
+      const response = await axios.get(`${baseUrl}/api/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUserData(response.data);
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
+      ToastAndroid.showWithGravity(
+        'Lỗi khi lấy thông tin người dùng',
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
+    }
+  };
 
   const apiUrl = `${baseUrl}/api/orders/history`;
 
@@ -77,8 +97,14 @@ const AccountScreen = ({ navigation }) => {
       <View style={styles.userInfoContainer}>
         <MaterialCommunityIcons name="account-circle" size={60} color="#FF3366" />
         <View style={styles.userInfoText}>
-          <Text style={styles.userName}>User</Text>
-          <Text style={styles.userPhone}>Phone</Text>
+          {userData ? (
+            <>
+              <Text style={styles.userName}>{userData.name}</Text>
+              <Text style={styles.userPhone}>{userData.phone}</Text>
+            </>
+          ) : (
+            <Text style={styles.loadingText}>Đang tải thông tin người dùng...</Text>
+          )}
         </View>
       </View>
       
