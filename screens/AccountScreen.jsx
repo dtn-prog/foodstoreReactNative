@@ -64,6 +64,7 @@ const AccountScreen = ({ navigation }) => {
     <View className="p-4 mb-4 bg-white rounded-lg shadow-md">
       <Text className="text-lg font-bold">Order Status: {item.status}</Text>
       <Text className="mb-1 text-gray-700">Address: {item.address}</Text>
+      <Text className="mb-1 text-gray-700">Payment Method: {item.payment_method}</Text>
       <Text className="text-gray-700">Duration: {item.duration}</Text>
       <Text className="my-2 text-gray-700">
         Order Date: {new Date(item.created_at).toLocaleString()}
