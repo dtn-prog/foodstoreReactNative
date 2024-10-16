@@ -27,7 +27,7 @@ const CartScreen = () => {
   const [restaurantLocation, setRestaurantLocation] = useState(null);
   const [duration, setDuration] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("cod"); // Default payment method
+  const [paymentMethod, setPaymentMethod] = useState("cod");
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
