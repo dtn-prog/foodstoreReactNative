@@ -1,11 +1,19 @@
 import React, { useEffect } from 'react';
-import { View, Text, Button, ToastAndroid, FlatList, Image } from 'react-native';
+import { View, Text, Button, ToastAndroid, FlatList, Image, StyleSheet } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { baseUrl } from '../api';
 import axios from 'axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-const AccountScreen = ({ navigation }) => {
+const AccountScreen = ({ route, navigation }) => {
+  const { user } = route.params || {};
+
+  useEffect(() => {
+    if (!user) {
+      navigation.navigate('Login');
+    }
+  }, [user, navigation]);
+
   const queryClient = useQueryClient();
   const apiUrl = `${baseUrl}/api/orders/history`;
 
@@ -61,22 +69,21 @@ const AccountScreen = ({ navigation }) => {
   };
 
   const renderOrderItem = ({ item }) => (
-    <View className="p-4 mb-4 bg-white rounded-lg shadow-md">
-      <Text className="text-lg font-bold">Trạng thái: {item.status}</Text>
-      <Text className="mb-1 text-gray-700">Địa chỉ: {item.address}</Text>
-      <Text className="mb-1 text-gray-700">Phương thức thanh toán: {item.payment_method}</Text>
-      <Text className="text-gray-700">Thời gian: {item.duration}</Text>
-      <Text className="my-2 text-gray-700">
+    <View style={styles.orderItem}>
+      <Text style={styles.orderStatus}>Trạng thái: {item.status}</Text>
+      <Text style={styles.orderDetail}>Địa chỉ: {item.address}</Text>
+      <Text style={styles.orderDetail}>Phương thức thanh toán: {item.payment_method}</Text>
+      <Text style={styles.orderDetail}>Thời gian: {item.duration}</Text>
+      <Text style={styles.orderDetail}>
         Thời gian đặt: {new Date(item.created_at).toLocaleString()}
       </Text>
-      {/* <Text className="font-bold">Items:</Text> */}
       {item.items.map((product, index) => (
-        <View key={index} className="flex-row items-center my-2">
+        <View key={index} style={styles.productItem}>
           <Image
             source={{ uri: `${baseUrl}/storage/${product.product_image}` }}
-            className="mr-2 w-12 h-12 rounded-md"
+            style={styles.productImage}
           />
-          <Text className="text-gray-800">
+          <Text style={styles.productName}>
             {product.product_name} (x{product.quantity})
           </Text>
         </View>
@@ -85,21 +92,24 @@ const AccountScreen = ({ navigation }) => {
   );
 
   if (isLoading) {
-    return <Text className="text-lg text-center">Đang tải...</Text>;
+    return <Text style={styles.loadingText}>Đang tải...</Text>;
   }
 
   if (error) {
     return (
-      <Text className="text-lg text-center text-red-500">
+      <Text style={styles.errorText}>
         Có lỗi lấy lịch sử: {error.message}
       </Text>
     );
   }
 
   return (
-    <View className="flex-1 p-4 bg-gray-100">
+    <View style={styles.container}>
+      <Text style={styles.userInfo}>Tên: {user?.name || 'N/A'}</Text>
+      <Text style={styles.userInfo}>Số điện thoại: {user?.phone || 'N/A'}</Text>
+      
       <Button title="Đăng xuất" color={"#FF3366"} onPress={handleLogout} />
-      <Text className="mt-6 mb-2 text-lg text-center">Lịch sử:</Text>
+      <Text style={styles.historyTitle}>Lịch sử:</Text>
       <FlatList
         data={orderHistory}
         renderItem={renderOrderItem}
@@ -109,5 +119,61 @@ const AccountScreen = ({ navigation }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#f7f7f7',
+  },
+  userInfo: {
+    fontSize: 18,
+    marginVertical: 4,
+    color: '#333',
+  },
+  orderItem: {
+    padding: 16,
+    marginBottom: 10,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  orderStatus: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  orderDetail: {
+    marginVertical: 2,
+    color: '#555',
+  },
+  productItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  productImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 4,
+    marginRight: 10,
+  },
+  loadingText: {
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  errorText: {
+    textAlign: 'center',
+    color: 'red',
+  },
+  historyTitle: {
+    marginTop: 20,
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+});
 
 export default AccountScreen;

@@ -36,7 +36,7 @@ const RegisterScreen = ({ navigation }) => {
       );
 
       await SecureStore.setItemAsync('userToken', token);
-      navigation.navigate('Account'); 
+      navigation.navigate('Account', { user });
     },
     onError: (error) => {
       ToastAndroid.showWithGravity(
