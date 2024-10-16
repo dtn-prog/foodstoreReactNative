@@ -18,7 +18,7 @@ import { GOMAP_API_KEY } from "../enviroment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Picker } from "@react-native-picker/picker";
 import { MaterialIcons } from '@expo/vector-icons';
-import Header from '../components/Header'
+import Header from '../components/Header';
 
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem, clearCart } = useContext(CartContext);
@@ -41,7 +41,7 @@ const CartScreen = () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         ToastAndroid.showWithGravity(
-          "Location access is required to get your current location.",
+          "Cần truy cập vị trí để lấy vị trí hiện tại của bạn.",
           ToastAndroid.SHORT,
           ToastAndroid.TOP
         );
@@ -68,7 +68,7 @@ const CartScreen = () => {
       setRestaurantLocation(response.data);
 
       const durationResponse = await axios.get(
-        `https://maps.gomaps.pro/maps/api/directions/json?origin=${coords.latitude},${coords.longitude}&destination=${response.data.lat},${response.data.long}&mode=driving&key=${GOMAP_API_KEY}`
+        `https://maps.gomaps.pro/maps/api/directions/json?origin=${coords.latitude},${coords.longitude}&destination=${response.data.lat},${response.data.long}&mode=driving&key=${GOMAP_API_KEY}&language=vi`
       );
 
       if (durationResponse.data.routes.length > 0) {
@@ -78,7 +78,7 @@ const CartScreen = () => {
     } catch (error) {
       console.error("Error fetching restaurant location:", error);
       ToastAndroid.showWithGravity(
-        "Could not fetch restaurant location.",
+        "Không thể lấy vị trí nhà hàng.",
         ToastAndroid.SHORT,
         ToastAndroid.TOP
       );
@@ -89,7 +89,7 @@ const CartScreen = () => {
     const token = await SecureStore.getItemAsync("userToken");
     if (!token) {
       ToastAndroid.showWithGravity(
-        "Please log in to proceed with checkout.",
+        "Vui lòng đăng nhập để tiếp tục thanh toán.",
         ToastAndroid.SHORT,
         ToastAndroid.TOP
       );
@@ -150,7 +150,7 @@ const CartScreen = () => {
     onSuccess: (data) => {
       setLoading(false);
       ToastAndroid.showWithGravity(
-        `Đặt hàng thành công, tổng giá tiền: $${data.totalPrice}`,
+        `Đặt hàng thành công, tổng giá tiền: ${data.totalPrice} đ`,
         ToastAndroid.SHORT,
         ToastAndroid.TOP
       );
@@ -171,41 +171,32 @@ const CartScreen = () => {
   });
 
   const renderItem = ({ item }) => (
-    <View className="flex-row items-center p-4 my-2 bg-white rounded-lg border border-gray-200 shadow-md">
-      <Image source={item.image} className="w-16 h-16 rounded-lg" />
-      <View className="flex-1 ml-4">
-        <Text className="text-lg font-bold">{item.name}</Text>
-        <View className="flex-row items-center mt-2">
-          <TouchableOpacity
-            onPress={() => decreaseQuantity(item.id)}
-            className="p-2 mr-2 bg-gray-300 rounded"
-          >
-            <Text className="font-bold">-</Text>
+    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 16, marginVertical: 8, backgroundColor: 'white', borderRadius: 8, borderWidth: 1, borderColor: 'gray', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 4 }}>
+      <Image source={item.image} style={{ width: 64, height: 64, borderRadius: 8 }} />
+      <View style={{ flex: 1, marginLeft: 16 }}>
+        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+          <TouchableOpacity onPress={() => decreaseQuantity(item.id)} style={{ padding: 8, backgroundColor: '#e0e0e0', borderRadius: 4 }}>
+            <Text style={{ fontWeight: 'bold' }}>-</Text>
           </TouchableOpacity>
-          <Text className="my-1 text-gray-600">{item.quantity}</Text>
-          <TouchableOpacity
-            onPress={() => increaseQuantity(item.id)}
-            className="p-2 ml-2 bg-gray-300 rounded"
-          >
-            <Text className="font-bold">+</Text>
+          <Text style={{ marginHorizontal: 8 }}>{item.quantity}</Text>
+          <TouchableOpacity onPress={() => increaseQuantity(item.id)} style={{ padding: 8, backgroundColor: '#e0e0e0', borderRadius: 4 }}>
+            <Text style={{ fontWeight: 'bold' }}>+</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => removeItem(item.id)}
-            className="p-2 ml-2 bg-red-500 rounded-full"
-          >
+          <TouchableOpacity onPress={() => removeItem(item.id)} style={{ padding: 8, marginLeft: 8, backgroundColor: 'red', borderRadius: 50 }}>
             <MaterialIcons name="delete" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </View>
-      <Text className="text-lg font-bold text-gray-800">
+      <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#4A4A4A' }}>
         {(item.price * item.quantity)} đ
       </Text>
     </View>
   );
 
   return (
-    <View className="flex-1 bg-gray-100">
-      <Header></Header>
+    <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+      <Header />
       <FlatList
         data={cartItems}
         renderItem={renderItem}
@@ -214,27 +205,27 @@ const CartScreen = () => {
       />
 
       {/* Address Input Field */}
-      <View className="p-1 mx-2">
-        <View className="flex-row items-center mb-1">
+      <View style={{ padding: 8, marginHorizontal: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
           <MaterialIcons name="location-on" size={24} color="#FF3366" />
-          <Text className="ml-2 text-base font-bold">Địa chỉ giao hàng</Text>
+          <Text style={{ marginLeft: 8, fontSize: 16, fontWeight: 'bold' }}>Địa chỉ giao hàng</Text>
         </View>
         <TextInput
           value={address}
           onChangeText={setAddress}
-          placeholder="Enter your address"
-          className="p-1 bg-white rounded border border-gray-300"
+          placeholder="Nhập địa chỉ của bạn"
+          style={{ padding: 8, backgroundColor: 'white', borderRadius: 5, borderWidth: 1, borderColor: 'gray' }}
           multiline
           numberOfLines={1} 
-          style={{ maxHeight: 40 }}
+          maxLength={100}
         />
       </View>
 
       {/* Payment Method Picker */}
-      <View className="p-1 mx-2">
-        <View className="flex-row items-center mb-1">
+      <View style={{ padding: 8, marginHorizontal: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
           <MaterialIcons name="payment" size={24} color="#FF3366" />
-          <Text className="ml-2 text-base font-bold">Phương thức trả tiền</Text>
+          <Text style={{ marginLeft: 8, fontSize: 16, fontWeight: 'bold' }}>Phương thức thanh toán</Text>
         </View>
         <Picker
           selectedValue={paymentMethod}
@@ -255,18 +246,18 @@ const CartScreen = () => {
 
       {/* Loading Indicator */}
       {loading && (
-        <View className="flex absolute inset-0 justify-center items-center bg-gray-200 bg-opacity-50">
+        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(200, 200, 200, 0.5)' }}>
           <ActivityIndicator size="large" color="#FF3366" />
         </View>
       )}
 
       <TouchableOpacity
         onPress={handleCheckout}
-        className="p-2 mx-2 my-1 bg-[#FF3366] rounded"
+        style={{ padding: 16, margin: 8, backgroundColor: '#FF3366', borderRadius: 5 }}
         disabled={loading}
       >
-        <Text className="text-base font-bold text-center text-white">
-          Đặt Hàng : {totalPrice} đ
+        <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', color: 'white' }}>
+          Đặt Hàng: {totalPrice} đ
         </Text>
       </TouchableOpacity>
     </View>
