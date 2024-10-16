@@ -4,6 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { baseUrl } from '../api';
 import axios from 'axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const AccountScreen = ({ route, navigation }) => {
   const { user } = route.params || {};
@@ -33,30 +34,6 @@ const AccountScreen = ({ route, navigation }) => {
     enabled: true,
     refetchOnWindowFocus: false,
   });
-
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      const token = await SecureStore.getItemAsync('userToken');
-      if (!token) {
-        navigation.navigate('Login');
-      } else {
-        queryClient.prefetchQuery({
-          queryKey: ['orderHistory'],
-          queryFn: fetchOrderHistory,
-        });
-      }
-    };
-
-    checkLoggedIn();
-  }, [navigation, queryClient]);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      queryClient.refetchQueries({ queryKey: ['orderHistory'] });
-    });
-
-    return unsubscribe;
-  }, [navigation, queryClient]);
 
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync('userToken');
@@ -105,8 +82,13 @@ const AccountScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.userInfo}>Tên: {user?.name || 'N/A'}</Text>
-      <Text style={styles.userInfo}>Số điện thoại: {user?.phone || 'N/A'}</Text>
+      <View style={styles.userInfoContainer}>
+        <MaterialCommunityIcons name="account-circle" size={60} color="#FF3366" />
+        <View style={styles.userInfoText}>
+          <Text style={styles.userName}>{user?.name || 'N/A'}</Text>
+          <Text style={styles.userPhone}>{user?.phone || 'N/A'}</Text>
+        </View>
+      </View>
       
       <Button title="Đăng xuất" color={"#FF3366"} onPress={handleLogout} />
       <Text style={styles.historyTitle}>Lịch sử:</Text>
@@ -126,10 +108,29 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f7f7f7',
   },
-  userInfo: {
-    fontSize: 18,
-    marginVertical: 4,
+  userInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    marginBottom: 20,
+  },
+  userInfoText: {
+    marginLeft: 10,
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: 'bold',
     color: '#333',
+  },
+  userPhone: {
+    fontSize: 16,
+    color: '#666',
   },
   orderItem: {
     padding: 16,
