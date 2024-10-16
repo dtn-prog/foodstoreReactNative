@@ -35,7 +35,7 @@ const ProductDetailScreen = ({ route }) => {
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{name}</Text>
           {/* <Text style={styles.id}>ID: {id}</Text> */}
-          <Text style={styles.price}>{price} đ</Text>
+          <Text style={styles.price}>{formatMoney(price)} đ</Text>
           <Text style={styles.description}>{desc}</Text>
         </View>
       </ScrollView>
@@ -56,6 +56,11 @@ const ProductDetailScreen = ({ route }) => {
     </View>
   );
 };
+
+const formatMoney = (amount) => {
+  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
+
 
 const styles = StyleSheet.create({
   container: {
@@ -100,16 +105,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
-    // backgroundColor: '#f8f8f8',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    // shadowColor: '#000',
-    // shadowOpacity: 0.1,
-    // shadowRadius: 8,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: -4,
-    // },
   },
   quantityContainer: {
     flexDirection: 'row',
