@@ -16,6 +16,7 @@ import { baseUrl } from "../api";
 import axios from "axios";
 import { GOMAP_API_KEY } from "../enviroment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Picker } from "@react-native-picker/picker";
 
 const CartScreen = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem, clearCart } = useContext(CartContext);
@@ -26,6 +27,7 @@ const CartScreen = () => {
   const [restaurantLocation, setRestaurantLocation] = useState(null);
   const [duration, setDuration] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("cod"); // Default payment method
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -121,13 +123,14 @@ const CartScreen = () => {
       product_id: item.id,
       quantity: item.quantity,
     }));
-
+    
     const payload = {
       lat: location.coords.latitude,
       long: location.coords.longitude,
       address,
       duration,
       items,
+      payment_method: paymentMethod, // Include payment method
     };
 
     checkoutMutation.mutate({ payload, token });
@@ -224,6 +227,19 @@ const CartScreen = () => {
           numberOfLines={1} 
           style={{ maxHeight: 40 }}
         />
+      </View>
+
+      {/* Payment Method Picker */}
+      <View className="p-1 mx-2">
+        <Text className="mb-1 text-base font-bold">Payment Method</Text>
+        <Picker
+          selectedValue={paymentMethod}
+          onValueChange={(itemValue) => setPaymentMethod(itemValue)}
+          style={{ height: 50, width: '100%' }}
+        >
+          <Picker.Item label="Cash on Delivery" value="cod" />
+          <Picker.Item label="Credit Card" value="cc" />
+        </Picker>
       </View>
 
       {/* Loading Indicator */}
