@@ -37,6 +37,10 @@ const CartScreen = () => {
     0
   );
 
+  const formatMoney = (amount) => {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -151,7 +155,7 @@ const CartScreen = () => {
     onSuccess: (data) => {
       setLoading(false);
       ToastAndroid.showWithGravity(
-        `Đặt hàng thành công, tổng giá tiền: ${data.totalPrice} đ`,
+        `Đặt hàng thành công, tổng giá tiền: ${formatMoney(data.totalPrice)} đ`,
         ToastAndroid.SHORT,
         ToastAndroid.TOP
       );
@@ -190,7 +194,7 @@ const CartScreen = () => {
         </View>
       </View>
       <Text style={styles.itemPrice}>
-        {(item.price * item.quantity)} đ
+        {formatMoney(item.price * item.quantity)} đ
       </Text>
     </View>
   );
@@ -251,7 +255,7 @@ const CartScreen = () => {
         disabled={loading}
       >
         <Text style={styles.checkoutButtonText}>
-          Đặt Hàng: {totalPrice} đ
+          Đặt Hàng: {formatMoney(totalPrice)} đ
         </Text>
       </TouchableOpacity>
     </View>

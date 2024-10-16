@@ -39,7 +39,7 @@ const ProductCard = ({ id, name, price, image, desc }) => {
       />
       <View style={styles.details}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.price}>{price} đ</Text>
+        <Text style={styles.price}>{formatMoney(price)} đ</Text>
         <TouchableOpacity onPress={handleAddToCart} style={styles.addButton}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
@@ -51,6 +51,10 @@ const ProductCard = ({ id, name, price, image, desc }) => {
       </View>
     </TouchableOpacity>
   );
+};
+
+const formatMoney = (amount) => {
+  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
 
 const styles = StyleSheet.create({
