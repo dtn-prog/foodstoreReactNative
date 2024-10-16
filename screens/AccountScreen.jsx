@@ -131,6 +131,9 @@ const renderOrderItem = ({ item }) => (
     <Text style={styles.orderDetail}>
       Thời gian đặt: {new Date(item.created_at).toLocaleString()}
     </Text>
+    <Text style={styles.orderDetail}>
+      Tổng giá: {item.total_price} đ
+    </Text>
     {item.items.map((product, index) => (
       <View key={index} style={styles.productItem}>
         <Image
@@ -222,11 +225,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
-  },
-  userPhone: {
-    fontSize: 16,
-    color: '#666',
-    marginLeft: 5, // Add some space between icon and text
   },
 });
 
