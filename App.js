@@ -9,8 +9,7 @@ import { CartProvider } from './context/CartContext';
 import AccountScreen from './screens/AccountScreen';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScren';
-import ReorderScreen from './screens/ReorderScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import MapScreen from './screens/MapScreen';
 import 'react-native-get-random-values';
 
@@ -45,20 +44,15 @@ export default function App() {
               component={HomeStack}
               options={{
                 tabBarIcon: () => <Entypo name="home" size={24} color="black" />,
+                tabBarLabel: 'Trang chủ',
               }}
             />
-            {/* <Tab.Screen
-              name="Reorder"
-              component={ReorderScreen}
-              options={{
-                tabBarIcon: () => <Entypo name="list" size={24} color="black" />,
-              }}
-            /> */}
             <Tab.Screen
               name="Cart"
               component={CartScreen}
               options={{
                 tabBarIcon: () => <Entypo name="shopping-cart" size={24} color="black" />,
+                tabBarLabel: 'Giỏ hàng',
               }}
             />
             <Tab.Screen
@@ -66,6 +60,7 @@ export default function App() {
               component={MapScreen}
               options={{
                 tabBarIcon: () => <Entypo name="map" size={24} color="black" />,
+                tabBarLabel: 'Map',
               }}
             />
             <Tab.Screen
@@ -73,6 +68,7 @@ export default function App() {
               component={AccountStack}
               options={{
                 tabBarIcon: () => <Entypo name="user" size={24} color="black" />,
+                tabBarLabel: 'Tài khoản',
               }}
             />
           </Tab.Navigator>
