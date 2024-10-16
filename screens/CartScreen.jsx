@@ -130,7 +130,7 @@ const CartScreen = () => {
       address,
       duration,
       items,
-      payment_method: paymentMethod, // Include payment method
+      payment_method: paymentMethod,
     };
 
     checkoutMutation.mutate({ payload, token });
