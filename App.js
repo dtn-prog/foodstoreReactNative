@@ -38,12 +38,14 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <CartProvider>
         <NavigationContainer>
-          <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: 'blue' }}>
+          <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: '#FF3366' }}>
             <Tab.Screen
               name="HomeStack"
               component={HomeStack}
               options={{
-                tabBarIcon: () => <Entypo name="home" size={24} color="black" />,
+                tabBarIcon: ({ focused }) => (
+                  <Entypo name="home" size={24} color={focused ? '#FF3366' : 'black'} />
+                ),
                 tabBarLabel: 'Trang chủ',
               }}
             />
@@ -51,7 +53,9 @@ export default function App() {
               name="Cart"
               component={CartScreen}
               options={{
-                tabBarIcon: () => <Entypo name="shopping-cart" size={24} color="black" />,
+                tabBarIcon: ({ focused }) => (
+                  <Entypo name="shopping-cart" size={24} color={focused ? '#FF3366' : 'black'} />
+                ),
                 tabBarLabel: 'Giỏ hàng',
               }}
             />
@@ -59,7 +63,9 @@ export default function App() {
               name="Map" 
               component={MapScreen}
               options={{
-                tabBarIcon: () => <Entypo name="map" size={24} color="black" />,
+                tabBarIcon: ({ focused }) => (
+                  <Entypo name="map" size={24} color={focused ? '#FF3366' : 'black'} />
+                ),
                 tabBarLabel: 'Map',
               }}
             />
@@ -67,7 +73,9 @@ export default function App() {
               name="AccountStack"
               component={AccountStack}
               options={{
-                tabBarIcon: () => <Entypo name="user" size={24} color="black" />,
+                tabBarIcon: ({ focused }) => (
+                  <Entypo name="user" size={24} color={focused ? '#FF3366' : 'black'} />
+                ),
                 tabBarLabel: 'Tài khoản',
               }}
             />
