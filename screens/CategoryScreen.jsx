@@ -48,15 +48,18 @@ const CategoryScreen = ({ route }) => {
       <FlatList
         data={products}
         renderItem={({ item }) => (
-          <ProductCard 
-            id={item.id} 
-            name={item.name} 
-            price={item.price} 
-            desc={item.desc}
-            image={{ uri: `${baseUrl}/storage/${item.image}` }} 
-          />
+          <View style={styles.cardContainer}>
+            <ProductCard 
+              id={item.id} 
+              name={item.name} 
+              price={item.price} 
+              desc={item.desc}
+              image={{ uri: `${baseUrl}/storage/${item.image}` }} 
+            />
+          </View>
         )}
         keyExtractor={item => item.id.toString()} 
+        contentContainerStyle={styles.flatListContent}
       />
     </View>
   );
@@ -88,6 +91,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+  },
+  cardContainer: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  flatListContent: {
+    alignItems: 'center',
   },
 });
 
