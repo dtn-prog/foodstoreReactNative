@@ -9,7 +9,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const orderStatusTranslation = {
   confirmed: 'Đã xác nhận',
-  shipped: 'Đã giao hàng',
+  shipped: 'Đang giao hàng',
   completed: 'Hoàn thành',
   bombed: 'Đã hủy',
 };
@@ -72,9 +72,9 @@ const AccountScreen = ({ navigation }) => {
     queryKey: ['orderHistory'],
     queryFn: fetchOrderHistory,
     enabled: !isLoadingToken,
-    refetchOnWindowFocus: false,
-    cacheTime: 20000,//20s
-    staleTime: 0,
+    refetchOnWindowFocus: true,
+    // cacheTime: 20000,
+    // staleTime: 0,
   });
 
   const handleLogout = async () => {
