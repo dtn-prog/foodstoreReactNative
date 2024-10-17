@@ -7,6 +7,7 @@ import { baseUrl } from '../api';
 import { useQuery } from '@tanstack/react-query';
 import ImageSlider from '../components/ImageSlider';
 import Header from '../components/Header';
+import { Ionicons } from '@expo/vector-icons';
 
 const HomeScreen = ({ navigation }) => {
   const apiUrl = `${baseUrl}/api/cats/products`;
@@ -72,8 +73,9 @@ const HomeScreen = ({ navigation }) => {
           data={groupedProducts}
           renderItem={({ item: category }) => (
             <View style={styles.categoryContainer}>
-              <TouchableOpacity onPress={() => navigation.navigate('Category', { categoryId: category.id })}>
+              <TouchableOpacity onPress={() => navigation.navigate('Category', { categoryId: category.id })} style={styles.categoryButton}>
                 <Text style={styles.categoryTitle}>{category.name}</Text>
+                <Ionicons name="chevron-forward" size={16} color="#FF3366" />
               </TouchableOpacity>
               <FlatList
                 data={category.products}
@@ -152,11 +154,16 @@ const styles = StyleSheet.create({
   categoryContainer: {
     marginBottom: 16,
   },
+  categoryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
   categoryTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 16,
-    marginBottom: 8,
+    color: '#FF3366',
   },
   horizontalFlatListContent: {
     paddingHorizontal: 16,
