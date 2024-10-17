@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, ToastAndroid, FlatList, Image, StyleSheet } from 'react-native';
+import { View, Text, Button, ToastAndroid, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { baseUrl } from '../api';
 import axios from 'axios';
@@ -7,10 +7,21 @@ import { useQuery } from '@tanstack/react-query';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
+const orderStatusTranslation = {
+  confirmed: 'Đã xác nhận',
+  shipped: 'Đã giao hàng',
+  completed: 'Hoàn thành',
+  bombed: 'Đã hủy',
+};
+
+const formatMoney = (amount) => {
+  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
+
 const AccountScreen = ({ navigation }) => {
   const [isLoadingToken, setIsLoadingToken] = useState(true);
   const [userData, setUserData] = useState(null);
-
+  const [selectedStatus, setSelectedStatus] = useState('all'); 
   useFocusEffect(
     React.useCallback(() => {
       const checkUserLogin = async () => {
@@ -62,19 +73,49 @@ const AccountScreen = ({ navigation }) => {
     queryFn: fetchOrderHistory,
     enabled: !isLoadingToken,
     refetchOnWindowFocus: false,
-    cacheTime: 0,
+    cacheTime: 20000,//20s
     staleTime: 0,
   });
 
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync('userToken');
     ToastAndroid.showWithGravity(
-      'You have been logged out.',
+      'Bạn đã đăng xuất.',
       ToastAndroid.SHORT,
       ToastAndroid.TOP
     );
     navigation.navigate('Login');
   };
+
+  const renderOrderItem = ({ item }) => (
+    <View style={styles.orderItem}>
+      <Text style={styles.orderStatus}>Trạng thái: {orderStatusTranslation[item.status]}</Text>
+      <Text style={styles.orderDetail}>Địa chỉ: {item.address}</Text>
+      <Text style={styles.orderDetail}>Phương thức thanh toán: {item.payment_method}</Text>
+      <Text style={styles.orderDetail}>Thời gian: {item.duration}</Text>
+      <Text style={styles.orderDetail}>
+        Thời gian đặt: {new Date(item.created_at).toLocaleString()}
+      </Text>
+      <Text style={styles.orderDetail}>
+        Tổng giá: { formatMoney(item.total_price)} đ
+      </Text>
+      {item.items.map((product, index) => (
+        <View key={index} style={styles.productItem}>
+          <Image
+            source={{ uri: `${baseUrl}/storage/${product.product_image}` }}
+            style={styles.productImage}
+          />
+          <Text style={styles.productName}>
+            {product.product_name} (x{product.quantity})
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+
+  const filteredOrders = selectedStatus === 'all' 
+    ? orderHistory 
+    : orderHistory?.filter(order => order.status === selectedStatus);
 
   if (isLoadingToken) {
     return <Text style={styles.loadingText}>Đang tải...</Text>;
@@ -111,9 +152,25 @@ const AccountScreen = ({ navigation }) => {
         </View>
       </View>
       <Button title="Đăng xuất" color={"#FF3366"} onPress={handleLogout} />
+      
+      {/* Status Filter Buttons */}
+      <View style={styles.statusFilterContainer}>
+        {['all', 'confirmed', 'shipped', 'completed', 'bombed'].map(status => (
+          <TouchableOpacity
+            key={status}
+            style={[styles.statusButton, selectedStatus === status && styles.selectedStatusButton]}
+            onPress={() => setSelectedStatus(status)}
+          >
+            <Text style={styles.statusButtonText}>
+              {status === 'all' ? 'Tất cả' : orderStatusTranslation[status]}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <Text style={styles.historyTitle}>Lịch sử:</Text>
       <FlatList
-        data={orderHistory}
+        data={filteredOrders}
         renderItem={renderOrderItem}
         keyExtractor={(item) => item.created_at}
         contentContainerStyle={{ paddingBottom: 20 }}
@@ -121,32 +178,6 @@ const AccountScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const renderOrderItem = ({ item }) => (
-  <View style={styles.orderItem}>
-    <Text style={styles.orderStatus}>Trạng thái: {item.status}</Text>
-    <Text style={styles.orderDetail}>Địa chỉ: {item.address}</Text>
-    <Text style={styles.orderDetail}>Phương thức thanh toán: {item.payment_method}</Text>
-    <Text style={styles.orderDetail}>Thời gian: {item.duration}</Text>
-    <Text style={styles.orderDetail}>
-      Thời gian đặt: {new Date(item.created_at).toLocaleString()}
-    </Text>
-    <Text style={styles.orderDetail}>
-      Tổng giá: {item.total_price} đ
-    </Text>
-    {item.items.map((product, index) => (
-      <View key={index} style={styles.productItem}>
-        <Image
-          source={{ uri: `${baseUrl}/storage/${product.product_image}` }}
-          style={styles.productImage}
-        />
-        <Text style={styles.productName}>
-          {product.product_name} (x{product.quantity})
-        </Text>
-      </View>
-    ))}
-  </View>
-);
 
 const styles = StyleSheet.create({
   container: {
@@ -225,6 +256,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+  },
+  statusFilterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  statusButton: {
+    flex: 1,
+    padding: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  selectedStatusButton: {
+    backgroundColor: '#FF3366',
+  },
+  statusButtonText: {
+    color: '#333',
   },
 });
 
