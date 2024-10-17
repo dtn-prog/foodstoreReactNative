@@ -9,12 +9,14 @@ const CategoryScreen = ({ route }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [categoryName, setCategoryName] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${baseUrl}/api/cats/${categoryId}/products`);
         setProducts(response.data.products);
+        setCategoryName(response.data.name);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -44,7 +46,7 @@ const CategoryScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sản phẩm trong danh mục</Text>
+      <Text style={styles.title}>{categoryName}</Text>
       <FlatList
         data={products}
         renderItem={({ item }) => (
