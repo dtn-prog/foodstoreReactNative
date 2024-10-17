@@ -10,6 +10,7 @@ const RegisterScreen = ({ navigation }) => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const checkLoggedIn = async () => {
@@ -39,6 +40,8 @@ const RegisterScreen = ({ navigation }) => {
       navigation.navigate('Account');
     },
     onError: (error) => {
+      const errorData = error.response?.data?.errors || {};
+      setErrors(errorData);
       ToastAndroid.showWithGravity(
         error.response?.data?.message || 'An error occurred',
         ToastAndroid.SHORT,
@@ -64,6 +67,7 @@ const RegisterScreen = ({ navigation }) => {
       password_confirmation: passwordConfirm,
     };
 
+    setErrors({});
     mutation.mutate(userData);
   };
 
@@ -80,6 +84,8 @@ const RegisterScreen = ({ navigation }) => {
         onChangeText={setName}
         placeholderTextColor="#aaa"
       />
+      {errors.name && <Text style={styles.errorText}>{errors.name.join(', ')}</Text>}
+      
       <TextInput
         style={styles.input}
         placeholder="Số điện thoại"
@@ -88,6 +94,8 @@ const RegisterScreen = ({ navigation }) => {
         keyboardType="phone-pad"
         placeholderTextColor="#aaa"
       />
+      {errors.phone && <Text style={styles.errorText}>{errors.phone.join(', ')}</Text>}
+      
       <TextInput
         style={styles.input}
         placeholder="Mật khẩu"
@@ -96,6 +104,8 @@ const RegisterScreen = ({ navigation }) => {
         onChangeText={setPassword}
         placeholderTextColor="#aaa"
       />
+      {errors.password && <Text style={styles.errorText}>{errors.password.join(', ')}</Text>}
+      
       <TextInput
         style={styles.input}
         placeholder="Nhập lại mật khẩu"
@@ -104,6 +114,7 @@ const RegisterScreen = ({ navigation }) => {
         onChangeText={setPasswordConfirm}
         placeholderTextColor="#aaa"
       />
+      {errors.password_confirmation && <Text style={styles.errorText}>{errors.password_confirmation.join(', ')}</Text>}
       
       <Button title="Đăng ký" onPress={handleRegister} disabled={mutation.isLoading} color="#FF3366" />
       
@@ -138,13 +149,18 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 12,
-    marginBottom: 16,
+    marginBottom: 8,
     height: 50,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#fff',
     elevation: 2,
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 16, 
+    fontSize: 12,
   },
   loginText: {
     marginTop: 20,
