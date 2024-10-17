@@ -1,4 +1,4 @@
-import { View, TextInput, FlatList, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { View, TextInput, FlatList, ActivityIndicator, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import ProductCard from '../components/ProductCard';
@@ -6,9 +6,9 @@ import axios from 'axios';
 import { baseUrl } from '../api';
 import { useQuery } from '@tanstack/react-query';
 import ImageSlider from '../components/ImageSlider';
-import Header from '../components/Header'
+import Header from '../components/Header';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const apiUrl = `${baseUrl}/api/cats/products`;
 
   const fetchData = async () => {
@@ -17,7 +17,7 @@ const HomeScreen = () => {
       return response.data;
     } catch (error) {
       console.error(`Error fetching data: ${error.message}`);
-      throw error; 
+      throw error;
     }
   };
 
@@ -39,7 +39,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header></Header>
+      <Header />
       {/* Image Slider */}
       <View style={styles.sliderContainer}>
         <ImageSlider />
@@ -72,7 +72,9 @@ const HomeScreen = () => {
           data={groupedProducts}
           renderItem={({ item: category }) => (
             <View style={styles.categoryContainer}>
-              <Text style={styles.categoryTitle}>{category.name}</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Category', { categoryId: category.id })}>
+                <Text style={styles.categoryTitle}>{category.name}</Text>
+              </TouchableOpacity>
               <FlatList
                 data={category.products}
                 renderItem={({ item }) => (
