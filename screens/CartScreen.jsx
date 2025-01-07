@@ -100,6 +100,7 @@ const CartScreen = () => {
       );
       return false;
     }
+
     return token;
   };
 
@@ -166,11 +167,20 @@ const CartScreen = () => {
     },
     onError: (error) => {
       setLoading(false);
-      ToastAndroid.showWithGravity(
-        "Có lỗi trong quá trình đặt hàng",
-        ToastAndroid.SHORT,
-        ToastAndroid.TOP
-      );
+      if (error.response && error.response.status === 403) {
+        // Handle 403 Forbidden error
+        ToastAndroid.showWithGravity(
+          error.response.data.message || "Bạn cần xác nhận số điện thoại trước khi đặt hàng.",
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP
+        );
+      } else {
+        ToastAndroid.showWithGravity(
+          "Có lỗi trong quá trình đặt hàng",
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP
+        );
+      }
       console.error(error);
     },
   });
