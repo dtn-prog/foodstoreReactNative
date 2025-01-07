@@ -21,7 +21,8 @@ const formatMoney = (amount) => {
 const AccountScreen = ({ navigation }) => {
   const [isLoadingToken, setIsLoadingToken] = useState(true);
   const [userData, setUserData] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState('all'); 
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  
   useFocusEffect(
     React.useCallback(() => {
       const checkUserLogin = async () => {
@@ -73,8 +74,6 @@ const AccountScreen = ({ navigation }) => {
     queryFn: fetchOrderHistory,
     enabled: !isLoadingToken,
     refetchOnWindowFocus: true,
-    // cacheTime: 20000,
-    // staleTime: 0,
   });
 
   const handleLogout = async () => {
@@ -97,7 +96,7 @@ const AccountScreen = ({ navigation }) => {
         Thời gian đặt: {new Date(item.created_at).toLocaleString()}
       </Text>
       <Text style={styles.orderDetail}>
-        Tổng giá: { formatMoney(item.total_price)} đ
+        Tổng giá: {formatMoney(item.total_price)} đ
       </Text>
       {item.items.map((product, index) => (
         <View key={index} style={styles.productItem}>
@@ -145,6 +144,13 @@ const AccountScreen = ({ navigation }) => {
                 <MaterialCommunityIcons name="phone" size={20} color="#FF3366" />
                 <Text style={styles.userPhone}>{userData.phone}</Text>
               </View>
+              {!userData.phone_verified_at && (
+                <Button
+                  title="Xác minh số điện thoại"
+                  color={"#FF3366"}
+                  onPress={() => navigation.navigate('OTPVerification')}
+                />
+              )}
             </>
           ) : (
             <Text style={styles.loadingText}>Đang tải thông tin người dùng...</Text>

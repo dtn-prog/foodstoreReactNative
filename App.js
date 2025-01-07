@@ -12,6 +12,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import MapScreen from './screens/MapScreen';
+import OTPVerificationScreen from './screens/OTPVerificationScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -29,6 +30,7 @@ const AccountStack = () => (
     <Stack.Screen name="Login" component={LoginScreen} />
     <Stack.Screen name="Account" component={AccountScreen} />
     <Stack.Screen name="Register" component={RegisterScreen} />
+    <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
   </Stack.Navigator>
 );
 
