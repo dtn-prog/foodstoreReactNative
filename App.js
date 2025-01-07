@@ -13,6 +13,8 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import MapScreen from './screens/MapScreen';
 import OTPVerificationScreen from './screens/OTPVerificationScreen';
+import RequestPasswordResetScreen from './screens/RequestPasswordResetScreen';
+import VerifyOTPScreen from './screens/VerifyOTPScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -31,6 +33,8 @@ const AccountStack = () => (
     <Stack.Screen name="Account" component={AccountScreen} />
     <Stack.Screen name="Register" component={RegisterScreen} />
     <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
+    <Stack.Screen name="RequestPasswordReset" component={RequestPasswordResetScreen} />
+    <Stack.Screen name="VerifyOTP" component={VerifyOTPScreen} />
   </Stack.Navigator>
 );
 

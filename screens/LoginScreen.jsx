@@ -85,6 +85,10 @@ const LoginScreen = ({ navigation }) => {
         Không có tài khoản? Đăng ký  
         <Text style={styles.registerLink}> Tại đây</Text>
       </Text>
+
+      <Text style={styles.forgotPasswordText} onPress={() => navigation.navigate('RequestPasswordReset')}>
+        Quên mật khẩu?
+      </Text>
     </View>
   );
 };
@@ -118,7 +122,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#fff',
-    elevation: 2,
   },
   registerText: {
     marginTop: 20,
@@ -128,6 +131,13 @@ const styles = StyleSheet.create({
   },
   registerLink: {
     fontWeight: 'bold',
+  },
+  forgotPasswordText: {
+    marginTop: 10,
+    textAlign: 'center',
+    color: '#FF3366',
+    fontSize: 16,
+    textDecorationLine: 'underline',
   },
 });
 
